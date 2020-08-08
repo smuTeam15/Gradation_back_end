@@ -1,6 +1,6 @@
 #!/bin/bash
 
-REPOSITORY=/home/ec2-user/CallforCode/
+REPOSITORY=/home/ec2-user/CallforCode
 PROJECT_NAME=Gradation
 
 echo "> Build 파일 복사"
