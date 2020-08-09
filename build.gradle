@@ -35,7 +35,7 @@ dependencies {
 
     compile('com.h2database:h2')
 
-    //compile('org.springframework.boot:spring-boot-starter-oauth2-client')
+    compile('org.springframework.boot:spring-boot-starter-oauth2-client')
 
     //세션 저장소를 db에 하기위한 준비
     compile('org.springframework.session:spring-session-jdbc')

@@ -1,4 +1,3 @@
-/*
 package org.team15.gradation.config.auth;
 
 import lombok.RequiredArgsConstructor;
@@ -34,4 +33,3 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                             .userService(customOAuth2UserService);
     }
 }
-*/

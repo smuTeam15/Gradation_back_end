@@ -1,4 +1,3 @@
-/*
 package org.team15.gradation.config.auth;
 
 import lombok.RequiredArgsConstructor;
@@ -52,4 +51,3 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         return userRepository.save(user);
     }
 }
-*/
