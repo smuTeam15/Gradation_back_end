@@ -40,5 +40,7 @@ dependencies {
     //세션 저장소를 db에 하기위한 준비
     compile('org.springframework.session:spring-session-jdbc')
 
+    compile('org.mariadb.jdbc:mariadb-java-client')
+
     testCompile('org.springframework.boot:spring-boot-starter-test')
 }
