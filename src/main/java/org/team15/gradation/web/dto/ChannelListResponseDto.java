@@ -11,7 +11,7 @@ public class ChannelListResponseDto {
     private String picture;
 
     public ChannelListResponseDto(Channel entity) {
-        this.id = entity.getChannel_id();
+        this.id = entity.getId();
         this.title = entity.getTitle();
         this.category =entity.getCategory();
         this.picture = entity.getPicture();

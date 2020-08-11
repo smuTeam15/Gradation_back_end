@@ -8,7 +8,4 @@ import java.util.List;
 
 public interface ChannelRepository extends JpaRepository<Channel, Long> {
 
-    @Query("SELECT c FROM Channel c WHERE c.id = :id")
-    List<Channel> findMyChannelsById(@Param("id") Long id);
-
 }
