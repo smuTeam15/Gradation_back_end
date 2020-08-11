@@ -14,7 +14,7 @@ public class IndexController {
 
     private final HttpSession httpSession;
 
-    @GetMapping("/index")
+    @GetMapping("/")
     public String indexa(Model model){
 
         SessionUser user = (SessionUser) httpSession.getAttribute("user");
@@ -24,16 +24,6 @@ public class IndexController {
             model.addAttribute("userPicture", user.getPicture());
         }
 
-        return "index.html";
-    }
-
-    @GetMapping("/home")
-    public String index2(){
-        return "asdf";
-    }
-
-    @GetMapping("/sta")
-    public String staa(){
-        return "main.html";
+        return "/";
     }
 }
