@@ -53,6 +53,11 @@ public class User {
         return this;
     }
 
+    public void inrollChannel(Channel channel){
+        channels.add(channel);
+        channel.getUsers().add(this);
+    }
+
     public String getRoleKey(){
         return this.role.getKey();
     }

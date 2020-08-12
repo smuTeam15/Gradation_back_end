@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.web.bind.annotation.*;
 import org.team15.gradation.config.auth.dto.SessionUser;
+import org.team15.gradation.domain.user.User;
 import org.team15.gradation.service.channel.ChannelService;
 import org.team15.gradation.web.dto.ChannelListResponseDto;
 import org.team15.gradation.web.dto.ChannelSaveRequestDto;
