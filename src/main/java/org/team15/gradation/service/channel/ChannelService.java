@@ -23,7 +23,9 @@ public class ChannelService {
     @Transactional
     public Long save(User user, ChannelSaveRequestDto requestDto){
         Channel channel = requestDto.toEntity();
-        channel.getUsers().add(user);
+
+        user.inrollChannel(channel);
+
         return channelRepository.save(requestDto.toEntity()).getId();
     }
 
