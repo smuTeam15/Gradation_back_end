@@ -14,6 +14,7 @@ import java.util.List;
 @Entity
 public class User {
     @Id
+    @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -30,11 +31,15 @@ public class User {
     @Column(nullable = false)
     private Role role;
 
-    @OneToMany(mappedBy = "user")
-    private List<Channel> channelList = new ArrayList<>();
+    @ManyToMany
+    @JoinTable(name = "USER_CHANNEL",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "channel_id"))
+    private List<Channel> channels = new ArrayList<>();
 
     @Builder
-    public User(String name, String email, String picture, Role role) {
+    public User(Long id, String name, String email, String picture, Role role) {
+        this.id = id;
         this.name = name;
         this.email = email;
         this.picture = picture;

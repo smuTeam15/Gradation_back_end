@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import org.team15.gradation.domain.user.User;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -13,8 +15,9 @@ import javax.persistence.*;
 public class Channel {
 
     @Id
+    @Column(name = "channel_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long channel_id;
+    private Long id;
 
     @Column(nullable = false)
     private String title;
@@ -25,9 +28,8 @@ public class Channel {
     @Column(nullable = false)
     private String picture;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @ManyToMany(mappedBy = "channels")
+    private List<User> users = new ArrayList<>();
 
     @Builder
     public Channel(String title, String category, String picture) {
