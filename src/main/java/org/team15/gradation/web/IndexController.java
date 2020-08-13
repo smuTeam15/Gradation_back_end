@@ -24,12 +24,7 @@ public class IndexController {
         MainPageResponseDto responseDto = new MainPageResponseDto();
 
         if(user != null){
-            System.out.println("============= in ==============");
-            responseDto.builder()
-                    .userName(user.getName())
-                    .picture(user.getPicture())
-                    .channelList(channelService.findMyChannel(user.getId()))
-                    .build();
+            responseDto.update(user.getName(), user.getPicture(), channelService.findMyChannel(user.getId()));
         }
 
         return responseDto;
