@@ -39,9 +39,8 @@ public class ChannelController {
     public Long update (@PathVariable Long channelId, @RequestBody ChannelSaveRequestDto requestDto){
 
         SessionUser user = (SessionUser) httpSession.getAttribute("user");
-        final Long userId = user.getId();
-        //service에 channel_id를 넘겨주고 update
-        return channelService.update(userId, channelId, requestDto);
+
+        return channelService.update(user.getId(), channelId, requestDto);
     }
 
     @DeleteMapping("/api/v1/channel/{channel_id}")

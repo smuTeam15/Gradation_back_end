@@ -1,5 +1,6 @@
 package org.team15.gradation.domain.dailymission;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.team15.gradation.domain.channel.Channel;
@@ -19,8 +20,13 @@ public class DailyMission {
     @Column(nullable = false)
     private String content;
 
-    //@ManyToOne
-    //@JoinColumn(name = "channel_id")
-    //private Channel channel;
+    @ManyToOne
+    @JoinColumn(name = "channel_id")
+    private Channel channel;
 
+    @Builder
+    public DailyMission(String content, Channel channel) {
+        this.content = content;
+        this.channel = channel;
+    }
 }
