@@ -16,7 +16,7 @@ public class IndexController {
     private final HttpSession httpSession;
     private final ChannelService channelService;
 
-    @GetMapping("/home")
+    @GetMapping("/decide")
     public MainPageResponseDto index(){
         //반환 dto 만들기
         SessionUser user = (SessionUser) httpSession.getAttribute("user");
