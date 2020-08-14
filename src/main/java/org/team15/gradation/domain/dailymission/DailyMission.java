@@ -19,8 +19,8 @@ public class DailyMission {
     @Column(nullable = false)
     private String content;
 
-    @ManyToOne
-    @JoinColumn(name = "channel_id")
-    private Channel channel;
+    //@ManyToOne
+    //@JoinColumn(name = "channel_id")
+    //private Channel channel;
 
 }

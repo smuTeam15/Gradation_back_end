@@ -32,8 +32,8 @@ public class Channel {
     @ManyToMany(mappedBy = "channels")
     private List<User> users = new ArrayList<>();
 
-    @OneToMany(mappedBy = "channel")
-    private List<DailyMission> dailyMissions = new ArrayList<>();
+    //@OneToMany(mappedBy = "channel")
+    //private List<DailyMission> dailyMissions = new ArrayList<>();
 
     @Builder
     public Channel(String title, String category, String picture) {
