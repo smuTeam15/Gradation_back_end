@@ -1,10 +1,8 @@
 package org.team15.gradation.domain.channel;
 
-import com.sun.javafx.css.converters.StringConverter;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.aspectj.weaver.EnumAnnotationValue;
 import org.team15.gradation.domain.dailymission.DailyMission;
 import org.team15.gradation.domain.user.User;
 
