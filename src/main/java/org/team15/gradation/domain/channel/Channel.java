@@ -1,10 +1,8 @@
 package org.team15.gradation.domain.channel;
 
-import com.sun.javafx.css.converters.StringConverter;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.aspectj.weaver.EnumAnnotationValue;
 import org.team15.gradation.domain.dailymission.DailyMission;
 import org.team15.gradation.domain.user.User;
 
@@ -38,7 +36,7 @@ public class Channel {
     @Column(name = "first_picture", nullable = false)
     private String firstPicture;
 
-    @Column(name = "secondSchool", nullable = false)
+    @Column(name = "second_picture", nullable = false)
     private String secondPicture;
 
     @Column(nullable = false)
