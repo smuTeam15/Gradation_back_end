@@ -36,7 +36,7 @@ public class Channel {
     @Column(name = "first_picture", nullable = false)
     private String firstPicture;
 
-    @Column(name = "secondSchool", nullable = false)
+    @Column(name = "second_picture", nullable = false)
     private String secondPicture;
 
     @Column(nullable = false)
