@@ -8,6 +8,6 @@ public class LoginController {
 
     @GetMapping("/")
     public String loading(){
-        return "/v1/loading";
+        return "/v1";
     }
 }

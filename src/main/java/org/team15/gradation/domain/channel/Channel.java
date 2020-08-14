@@ -3,6 +3,7 @@ package org.team15.gradation.domain.channel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.team15.gradation.domain.dailymission.DailyMission;
 import org.team15.gradation.domain.user.User;
 
 import javax.persistence.*;
@@ -30,6 +31,9 @@ public class Channel {
 
     @ManyToMany(mappedBy = "channels")
     private List<User> users = new ArrayList<>();
+
+    @OneToMany(mappedBy = "channel")
+    private List<DailyMission> dailyMissions = new ArrayList<>();
 
     @Builder
     public Channel(String title, String category, String picture) {
