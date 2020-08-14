@@ -5,21 +5,30 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.team15.gradation.domain.channel.Channel;
 
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
 @Getter
 @NoArgsConstructor
 public class ChannelSaveRequestDto {
-    private String title;
+
+    private String firstSchool;
+    private String secondSchool;
+    private String description;
     private String category;
-    private String picture;
+    private String firstPicture;
+    private String secondPicture;
 
-    @Builder
-    public ChannelSaveRequestDto(String title, String category, String picture) {
-        this.title = title;
-        this.category = category;
-        this.picture = picture;
-    }
-
-    public Channel toEntity() {
-        return Channel.builder().title(title).category(category).picture(picture).build();
+    public Channel toEntity(Long id){
+        return Channel.builder()
+                .firstSchool(firstSchool)
+                .secondSchool(secondSchool)
+                .description(description)
+                .category(category)
+                .firstPicture(firstPicture)
+                .secondPicture(secondPicture)
+                .build();
     }
 }

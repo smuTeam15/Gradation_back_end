@@ -22,20 +22,25 @@ public class ChannelService {
 
     @Transactional
     public Long save(User user, ChannelSaveRequestDto requestDto){
-        Channel channel = requestDto.toEntity();
+        Channel channel = requestDto.toEntity(user.getId());
 
         user.inrollChannel(channel);
 
-        return channelRepository.save(requestDto.toEntity()).getId();
+        return channelRepository.save(channel).getId();
     }
 
     @Transactional(readOnly = true)
-    public List<ChannelListResponseDto> findMyChannel(Long id){
-        //사용자의 id를 받았습니다. 조회해서 넘겨줍시다.
-        return userRepository.findById(id).get().getChannels()
+    public List<ChannelListResponseDto> findMyChannel(Long userId){
+        List<ChannelListResponseDto> findChannels = userRepository.findById(userId).get().getChannels()
                 .stream()
                 .map(ChannelListResponseDto::new)
                 .collect(Collectors.toList());
+
+        for(int i = 0; i < findChannels.size(); i++)
+            if(userId != findChannels.get(i).getOwner())
+                findChannels.get(i).setOwner(-1L);
+
+        return findChannels;
     }
 
     @Transactional
@@ -49,16 +54,16 @@ public class ChannelService {
             throw new IllegalArgumentException("해당 채널의 멤버가 아닙니다. userId" + userId + " channelId " + channelId);
         }
 
-        channel.update(requestDto.getTitle(), requestDto.getCategory(), requestDto.getPicture());
+        channel.update(requestDto.getFirstSchool(), requestDto.getSecondSchool(), requestDto.getDescription(), requestDto.getCategory(), requestDto.getFirstPicture(), requestDto.getSecondPicture());
 
         return channelId;
     }
 
     @Transactional
-    public void delete (Long id){
+    public void delete (Long channelId){
         //update 와 비슷하게 채널에속한 멤버만 삭제 가능하게 할까?
-        Channel channel = channelRepository.findById(id).orElseThrow(() -> new
-                IllegalArgumentException("삭제 단계에서 해당 Channel이 없습니다. id = " + id));
+        Channel channel = channelRepository.findById(channelId).orElseThrow(() -> new
+                IllegalArgumentException("삭제 단계에서 해당 Channel이 없습니다. chennelId = " + channelId));
 
         channelRepository.delete(channel);
     }
