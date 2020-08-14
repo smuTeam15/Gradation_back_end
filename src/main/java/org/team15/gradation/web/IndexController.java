@@ -16,8 +16,8 @@ public class IndexController {
     private final HttpSession httpSession;
     private final ChannelService channelService;
 
-    @GetMapping("/decide")
-    public MainPageResponseDto index(){
+    @GetMapping("/v1/login")
+    public MainPageResponseDto login(){
         //반환 dto 만들기
         SessionUser user = (SessionUser) httpSession.getAttribute("user");
 
@@ -29,21 +29,4 @@ public class IndexController {
 
         return responseDto;
     }
-
-    /*
-    * controller /asdf는 인식을 못함
-    * */
-
-//    @GetMapping("/loginSuccess")
-//    public String index(Model model){
-//
-//        SessionUser user = (SessionUser) httpSession.getAttribute("user");
-//
-//        if(user != null){
-//            model.addAttribute("userName", user.getName());
-//            model.addAttribute("userPicture", user.getPicture());
-//        }
-//
-//        return "/home";
-//    }
 }
