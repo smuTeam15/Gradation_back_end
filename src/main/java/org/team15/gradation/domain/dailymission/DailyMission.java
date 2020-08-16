@@ -29,4 +29,8 @@ public class DailyMission {
         this.content = content;
         this.channel = channel;
     }
+
+    public void setChannel(Channel channel) {
+        this.channel = channel;
+    }
 }

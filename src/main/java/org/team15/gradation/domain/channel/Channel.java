@@ -33,11 +33,13 @@ public class Channel {
     @Column(nullable = false)
     private String category;
 
+    @Lob
     @Column(name = "first_picture", nullable = false)
-    private String firstPicture;
+    private byte[] firstPicture;
 
+    @Lob
     @Column(name = "second_picture", nullable = false)
-    private String secondPicture;
+    private byte[] secondPicture;
 
     @Column(nullable = false)
     private Long owner;
@@ -49,7 +51,7 @@ public class Channel {
     private List<DailyMission> dailyMissions = new ArrayList<>();
 
     @Builder
-    public Channel(String firstSchool, String secondSchool, String description, String category, String firstPicture, String secondPicture, Long owner) {
+    public Channel(String firstSchool, String secondSchool, String description, String category, byte[] firstPicture, byte[] secondPicture, Long owner) {
         this.firstSchool = firstSchool;
         this.secondSchool = secondSchool;
         this.description = description;
@@ -59,7 +61,7 @@ public class Channel {
         this.owner = owner;
     }
 
-    public void update(String firstSchool, String secondSchool, String description, String category, String firstPicture, String secondPicture) {
+    public void update(String firstSchool, String secondSchool, String description, String category, byte[] firstPicture, byte[] secondPicture) {
         this.firstSchool = firstSchool;
         this.secondSchool = secondSchool;
         this.description = description;

@@ -3,6 +3,8 @@ package org.team15.gradation.web;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.team15.gradation.config.auth.LoginUser;
 import org.team15.gradation.config.auth.dto.SessionUser;
 import org.team15.gradation.domain.user.User;
 import org.team15.gradation.service.channel.ChannelService;
@@ -19,15 +21,21 @@ public class ChannelController {
     private final ChannelService channelService;
 
     @PostMapping("/api/v1/channel")
-    public Long save(@RequestBody ChannelSaveRequestDto requestDto){
-        SessionUser user = (SessionUser) httpSession.getAttribute("user");
+    public Long save(@RequestParam("firstPicture") MultipartFile firstPicture,
+                     @RequestParam("secondPicture") MultipartFile secondPicture,
+                     @RequestParam("description") String description,
+                     @RequestParam("category") String category,
+                     @RequestParam("firstSchool") String firstSchool,
+                     @RequestParam("secondSchool") String secondSchool,
+                     @LoginUser SessionUser user) {
 
-        //만든 유저, 방 키값 넘겨주기
-        return channelService.save(user.toUser(), requestDto);
+        ChannelSaveRequestDto requestDto = new ChannelSaveRequestDto(firstSchool, secondSchool, description, category);
+
+        return channelService.save(requestDto, firstPicture, secondPicture, user);
     }
 
     @GetMapping("/api/v1/channel/")
-    public List<ChannelListResponseDto> findById (){
+    public List<ChannelListResponseDto> findById() {
         //세션에서 id 꺼내와서 서비스에 넘거줍시다.
         SessionUser user = (SessionUser) httpSession.getAttribute("user");
         final Long userId = user.getId();
@@ -36,7 +44,7 @@ public class ChannelController {
     }
 
     @PutMapping("/api/v1/channel/{channelId}")
-    public Long update (@PathVariable Long channelId, @RequestBody ChannelSaveRequestDto requestDto){
+    public Long update(@PathVariable Long channelId, @RequestBody ChannelSaveRequestDto requestDto) {
 
         SessionUser user = (SessionUser) httpSession.getAttribute("user");
 
@@ -44,7 +52,7 @@ public class ChannelController {
     }
 
     @DeleteMapping("/api/v1/channel/{channel_id}")
-    public Long delete(@PathVariable Long id){
+    public Long delete(@PathVariable Long id) {
         channelService.delete(id);
         return id;
     }
