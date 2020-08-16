@@ -18,10 +18,9 @@ public class ChannelSaveRequestDto {
     private String secondSchool;
     private String description;
     private String category;
-    private String firstPicture;
-    private String secondPicture;
+    private Long owner;
 
-    public Channel toEntity(Long id){
+    public Channel toEntity(Long id, byte[] firstPicture, byte[] secondPicture){
         return Channel.builder()
                 .firstSchool(firstSchool)
                 .secondSchool(secondSchool)
@@ -29,6 +28,7 @@ public class ChannelSaveRequestDto {
                 .category(category)
                 .firstPicture(firstPicture)
                 .secondPicture(secondPicture)
+                .owner(id)
                 .build();
     }
 }

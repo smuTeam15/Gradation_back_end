@@ -3,6 +3,8 @@ package org.team15.gradation.service.channel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+import org.team15.gradation.config.auth.dto.SessionUser;
 import org.team15.gradation.domain.channel.Channel;
 import org.team15.gradation.domain.channel.ChannelRepository;
 import org.team15.gradation.domain.user.User;
@@ -10,6 +12,7 @@ import org.team15.gradation.domain.user.UserRepository;
 import org.team15.gradation.web.dto.ChannelListResponseDto;
 import org.team15.gradation.web.dto.ChannelSaveRequestDto;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,10 +24,19 @@ public class ChannelService {
 
 
     @Transactional
-    public Long save(User user, ChannelSaveRequestDto requestDto){
-        Channel channel = requestDto.toEntity(user.getId());
+    public Long save(ChannelSaveRequestDto requestDto,
+                     MultipartFile firstPicture,
+                     MultipartFile secondPicture,
+                     SessionUser user){
 
-        user.inrollChannel(channel);
+        Channel channel = null;
+
+        try {
+            channel = requestDto.toEntity(user.getId(), firstPicture.getBytes(), secondPicture.getBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        userRepository.findById(user.getId()).get().getChannels().add(channel);
 
         return channelRepository.save(channel).getId();
     }
@@ -54,7 +66,7 @@ public class ChannelService {
             throw new IllegalArgumentException("해당 채널의 멤버가 아닙니다. userId" + userId + " channelId " + channelId);
         }
 
-        channel.update(requestDto.getFirstSchool(), requestDto.getSecondSchool(), requestDto.getDescription(), requestDto.getCategory(), requestDto.getFirstPicture(), requestDto.getSecondPicture());
+        //channel.update(requestDto.getFirstSchool(), requestDto.getSecondSchool(), requestDto.getDescription(), requestDto.getCategory(), requestDto.getFirstPicture(), requestDto.getSecondPicture());
 
         return channelId;
     }

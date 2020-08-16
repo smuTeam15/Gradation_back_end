@@ -13,9 +13,9 @@ public class ChannelListResponseDto {
     private String secondSchool;
     private String description;
     private String category;
-    private String firstPicture;
-    private String secondPicture;
-    private Long Owner;
+    private byte[] firstPicture;
+    private byte[] secondPicture;
+    private Long owner;
 
     public ChannelListResponseDto(Channel entity){
         this.id = entity.getId();
@@ -25,10 +25,10 @@ public class ChannelListResponseDto {
         this.category = entity.getDescription();
         this.firstPicture = entity.getFirstPicture();
         this.secondPicture = entity.getSecondPicture();
-        this.Owner = entity.getOwner();
+        this.owner = entity.getOwner();
     }
 
     public void setOwner(Long owner) {
-        Owner = owner;
+        this.owner = owner;
     }
 }
