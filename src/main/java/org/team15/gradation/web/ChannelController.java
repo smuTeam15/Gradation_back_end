@@ -34,7 +34,7 @@ public class ChannelController {
         return channelService.save(requestDto, firstPicture, secondPicture, user);
     }
 
-    @GetMapping("/api/v1/channel/")
+    @GetMapping("/api/v1/channel1")
     public List<ChannelListResponseDto> findById(@LoginUser SessionUser user) {
 
         return channelService.findMyChannel(user.getId());
