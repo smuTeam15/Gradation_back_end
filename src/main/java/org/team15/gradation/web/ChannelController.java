@@ -23,8 +23,13 @@ public class ChannelController {
     @PostMapping("/api/v1/channel")
     public Long save(@RequestParam("firstPicture") MultipartFile firstPicture,
                      @RequestParam("secondPicture") MultipartFile secondPicture,
-                     @RequestBody ChannelSaveRequestDto requestDto,
+                     @RequestParam("description") String description,
+                     @RequestParam("category") String category,
+                     @RequestParam("firstSchool") String firstSchool,
+                     @RequestParam("secondSchool") String secondSchool,
                      @LoginUser SessionUser user) {
+
+        ChannelSaveRequestDto requestDto = new ChannelSaveRequestDto(firstSchool, secondSchool, description, category);
 
         return channelService.save(requestDto, firstPicture, secondPicture, user);
     }
