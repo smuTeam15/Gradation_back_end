@@ -35,12 +35,9 @@ public class ChannelController {
     }
 
     @GetMapping("/api/v1/channel/")
-    public List<ChannelListResponseDto> findById() {
-        //세션에서 id 꺼내와서 서비스에 넘거줍시다.
-        SessionUser user = (SessionUser) httpSession.getAttribute("user");
-        final Long userId = user.getId();
+    public List<ChannelListResponseDto> findById(@LoginUser SessionUser user) {
 
-        return channelService.findMyChannel(userId);
+        return channelService.findMyChannel(user.getId());
     }
 
     @PutMapping("/api/v1/channel/{channelId}")
