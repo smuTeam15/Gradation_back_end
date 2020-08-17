@@ -1,4 +1,4 @@
-package org.team15.gradation.web.dto;
+package org.team15.gradation.web.dto.channel;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

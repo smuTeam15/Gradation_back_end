@@ -9,10 +9,9 @@ import org.team15.gradation.domain.channel.Channel;
 import org.team15.gradation.domain.channel.ChannelRepository;
 import org.team15.gradation.domain.dailymission.DailyMission;
 import org.team15.gradation.domain.dailymission.DailyMissionRepository;
-import org.team15.gradation.web.dto.DailyMissionDeleteRequestDto;
-import org.team15.gradation.web.dto.DailyMissionResponseDto;
-import org.team15.gradation.web.dto.DailyMissionSaveRequestDto;
-import org.team15.gradation.web.dto.DailyMissionUpdateRequestDto;
+import org.team15.gradation.web.dto.dailymission.DailyMissionResponseDto;
+import org.team15.gradation.web.dto.dailymission.DailyMissionSaveRequestDto;
+import org.team15.gradation.web.dto.dailymission.DailyMissionUpdateRequestDto;
 
 import java.util.List;
 import java.util.Optional;
@@ -62,8 +61,13 @@ public class DailyMissionService {
     @Transactional
     public List<DailyMissionResponseDto> findMyDailyMission(Long channelId, @LoginUser SessionUser user) {
 
+        //channel에서 가져오서 권한 부터 확인
+        Channel findChannel = channelRepository.findById(channelId).orElse(null);
 
-        return channelRepository.findById(channelId).get().getDailyMissions()
+        if(findChannel.getOwner() != user.getId())
+            return null;
+
+        return findChannel.getDailyMissions()
                 .stream()
                 .map(DailyMissionResponseDto::new)
                 .collect(Collectors.toList());
