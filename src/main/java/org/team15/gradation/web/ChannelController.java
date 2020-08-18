@@ -1,23 +1,24 @@
 package org.team15.gradation.web;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Required;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.team15.gradation.config.auth.LoginUser;
 import org.team15.gradation.config.auth.dto.SessionUser;
-import org.team15.gradation.domain.user.User;
 import org.team15.gradation.service.channel.ChannelService;
-import org.team15.gradation.web.dto.ChannelListResponseDto;
-import org.team15.gradation.web.dto.ChannelSaveRequestDto;
+import org.team15.gradation.web.dto.channel.ChannelListResponseDto;
+import org.team15.gradation.web.dto.channel.ChannelSaveRequestDto;
+import org.team15.gradation.web.dto.channel.ChannelUpdateRequestDto;
 
-import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
 public class ChannelController {
-    private final HttpSession httpSession;
+
     private final ChannelService channelService;
 
     @PostMapping("/api/v1/channel")
@@ -27,11 +28,11 @@ public class ChannelController {
                      @RequestParam("category") String category,
                      @RequestParam("firstSchool") String firstSchool,
                      @RequestParam("secondSchool") String secondSchool,
-                     @LoginUser SessionUser user) {
+                     @LoginUser SessionUser user) throws IOException {
 
-        ChannelSaveRequestDto requestDto = new ChannelSaveRequestDto(firstSchool, secondSchool, description, category);
+        ChannelSaveRequestDto requestDto = new ChannelSaveRequestDto(firstSchool, secondSchool, description, category, firstPicture.getBytes(), secondPicture.getBytes(), user.getId());
 
-        return channelService.save(requestDto, firstPicture, secondPicture, user);
+        return channelService.save(requestDto, user);
     }
 
     @GetMapping("/api/v1/channel1")
@@ -41,17 +42,41 @@ public class ChannelController {
     }
 
     @PutMapping("/api/v1/channel/{channelId}")
-    public Long update(@PathVariable Long channelId, @RequestBody ChannelSaveRequestDto requestDto) {
+    public ResponseEntity update(@PathVariable Long channelId,
+                                 @RequestParam("firstPicture") MultipartFile firstPicture,
+                                 @RequestParam("secondPicture") MultipartFile secondPicture,
+                                 @RequestParam("description") String description,
+                                 @RequestParam("category") String category,
+                                 @RequestParam("firstSchool") String firstSchool,
+                                 @RequestParam("secondSchool") String secondSchool,
+                                 @LoginUser SessionUser user) throws IOException {
 
-        SessionUser user = (SessionUser) httpSession.getAttribute("user");
+        ChannelUpdateRequestDto requestDto = new ChannelUpdateRequestDto(firstSchool, secondSchool, description, category, firstPicture.getBytes(), secondPicture.getBytes());
 
-        return channelService.update(user.getId(), channelId, requestDto);
+        final int result = channelService.update(user, channelId, requestDto);
+
+        switch (result) {
+            case -1:
+                return new ResponseEntity(HttpStatus.FORBIDDEN);
+            case -2:
+                return new ResponseEntity(HttpStatus.NO_CONTENT);
+            default:
+                return new ResponseEntity(HttpStatus.OK);
+        }
     }
 
-    @DeleteMapping("/api/v1/channel/{channel_id}")
-    public Long delete(@PathVariable Long id) {
-        channelService.delete(id);
-        return id;
-    }
+    @DeleteMapping("/api/v1/channel/{channelId}")
+    public ResponseEntity delete(@PathVariable Long channelId, @LoginUser SessionUser user) {
 
+        final int result = channelService.delete(channelId, user);
+
+        switch (result) {
+            case -1:
+                return new ResponseEntity(HttpStatus.FORBIDDEN);
+            case -2:
+                return new ResponseEntity(HttpStatus.NO_CONTENT);
+            default:
+                return new ResponseEntity(HttpStatus.OK);
+        }
+    }
 }

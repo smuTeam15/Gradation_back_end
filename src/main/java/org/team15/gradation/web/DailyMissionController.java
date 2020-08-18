@@ -7,17 +7,12 @@ import org.springframework.web.bind.annotation.*;
 import org.team15.gradation.config.auth.LoginUser;
 import org.team15.gradation.config.auth.dto.SessionUser;
 import org.team15.gradation.domain.channel.ChannelRepository;
-import org.team15.gradation.domain.dailymission.DailyMission;
 import org.team15.gradation.service.channel.DailyMissionService;
-import org.team15.gradation.web.dto.DailyMissionDeleteRequestDto;
-import org.team15.gradation.web.dto.DailyMissionResponseDto;
-import org.team15.gradation.web.dto.DailyMissionSaveRequestDto;
-import org.team15.gradation.web.dto.DailyMissionUpdateRequestDto;
+import org.team15.gradation.web.dto.dailymission.DailyMissionResponseDto;
+import org.team15.gradation.web.dto.dailymission.DailyMissionSaveRequestDto;
+import org.team15.gradation.web.dto.dailymission.DailyMissionUpdateRequestDto;
 
-import javax.mail.Session;
-import javax.net.ssl.HttpsURLConnection;
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -40,13 +35,12 @@ public class DailyMissionController {
         *
         * => 이때 service에서 channelRepository.findById를 사용한다면?
         *
-        * if(true)
-        *   save
-        * else
-        *   return
+        * null : 값이 없거나, 권한이 맞지 않음
+        *
         * */
 
         return dailyMissionService.findMyDailyMission(channelId, user);
+
     }
 
     @PutMapping("/api/v1/dailymission/{channelId}")

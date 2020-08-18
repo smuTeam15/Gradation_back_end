@@ -1,9 +1,9 @@
 package org.team15.gradation.web.dto;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.team15.gradation.web.dto.channel.ChannelListResponseDto;
 
 import java.util.ArrayList;
 import java.util.List;

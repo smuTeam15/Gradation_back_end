@@ -1,9 +1,10 @@
-package org.team15.gradation.config.auth;
+package org.team15.gradation.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.team15.gradation.config.auth.LoginUserArgumentResolver;
 
 import java.util.List;
 

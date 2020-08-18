@@ -2,6 +2,8 @@ package org.team15.gradation.domain.post;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.team15.gradation.domain.channel.Channel;
+import org.team15.gradation.domain.user.User;
 
 import javax.persistence.*;
 
@@ -14,12 +16,17 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 500, nullable = false)
-    private String title;
+    @Column
+    private byte[] picture;
 
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
 
-    private String author;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
+    @ManyToOne
+    @JoinColumn(name = "channel_id")
+    private Channel channel;
 }

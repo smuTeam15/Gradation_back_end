@@ -1,4 +1,4 @@
-package org.team15.gradation.web.dto;
+package org.team15.gradation.web.dto.channel;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -18,16 +18,21 @@ public class ChannelSaveRequestDto {
     private String secondSchool;
     private String description;
     private String category;
+    private byte[] firstPicture;
+    private byte[] secondPicture;
     private Long owner;
 
-    public ChannelSaveRequestDto(String firstSchool, String secondSchool, String description, String category) {
+    public ChannelSaveRequestDto(String firstSchool, String secondSchool, String description, String category, byte[] firstPicture, byte[] secondPicture, Long owner) {
         this.firstSchool = firstSchool;
         this.secondSchool = secondSchool;
         this.description = description;
         this.category = category;
+        this.firstPicture = firstPicture;
+        this.secondPicture = secondPicture;
+        this.owner = owner;
     }
 
-    public Channel toEntity(Long id, byte[] firstPicture, byte[] secondPicture){
+    public Channel toEntity(){
         return Channel.builder()
                 .firstSchool(firstSchool)
                 .secondSchool(secondSchool)
@@ -35,7 +40,7 @@ public class ChannelSaveRequestDto {
                 .category(category)
                 .firstPicture(firstPicture)
                 .secondPicture(secondPicture)
-                .owner(id)
+                .owner(owner)
                 .build();
     }
 }

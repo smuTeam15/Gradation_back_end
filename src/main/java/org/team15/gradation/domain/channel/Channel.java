@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.team15.gradation.domain.dailymission.DailyMission;
 import org.team15.gradation.domain.user.User;
+import org.team15.gradation.web.dto.channel.ChannelSaveRequestDto;
+import org.team15.gradation.web.dto.channel.ChannelUpdateRequestDto;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -61,7 +63,7 @@ public class Channel {
         this.owner = owner;
     }
 
-    public void update(String firstSchool, String secondSchool, String description, String category, byte[] firstPicture, byte[] secondPicture) {
+    public void update(ChannelUpdateRequestDto requestDto) {
         this.firstSchool = firstSchool;
         this.secondSchool = secondSchool;
         this.description = description;

@@ -1,0 +1,6 @@
+package org.team15.gradation.domain.post;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface PostRepository extends JpaRepository<Post,Long> {
+}

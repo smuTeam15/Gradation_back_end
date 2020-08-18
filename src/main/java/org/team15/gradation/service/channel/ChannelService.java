@@ -3,80 +3,75 @@ package org.team15.gradation.service.channel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 import org.team15.gradation.config.auth.dto.SessionUser;
 import org.team15.gradation.domain.channel.Channel;
 import org.team15.gradation.domain.channel.ChannelRepository;
-import org.team15.gradation.domain.user.User;
 import org.team15.gradation.domain.user.UserRepository;
-import org.team15.gradation.web.dto.ChannelListResponseDto;
-import org.team15.gradation.web.dto.ChannelSaveRequestDto;
+import org.team15.gradation.web.dto.channel.ChannelListResponseDto;
+import org.team15.gradation.web.dto.channel.ChannelSaveRequestDto;
+import org.team15.gradation.web.dto.channel.ChannelUpdateRequestDto;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
 public class ChannelService {
+
     private final UserRepository userRepository;
     private final ChannelRepository channelRepository;
 
-
     @Transactional
-    public Long save(ChannelSaveRequestDto requestDto,
-                     MultipartFile firstPicture,
-                     MultipartFile secondPicture,
-                     SessionUser user){
+    public Long save(ChannelSaveRequestDto requestDto, SessionUser user) {
 
-        Channel channel = null;
+        Channel saveChannel = requestDto.toEntity();
 
-        try {
-            channel = requestDto.toEntity(user.getId(), firstPicture.getBytes(), secondPicture.getBytes());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        userRepository.findById(user.getId()).get().getChannels().add(channel);
+        userRepository.findById(user.getId()).get().getChannels().add(saveChannel);
 
-        return channelRepository.save(channel).getId();
+        return channelRepository.save(saveChannel).getId();
     }
 
     @Transactional(readOnly = true)
-    public List<ChannelListResponseDto> findMyChannel(Long userId){
+    public List<ChannelListResponseDto> findMyChannel(Long userId) {
         List<ChannelListResponseDto> findChannels = userRepository.findById(userId).get().getChannels()
                 .stream()
                 .map(ChannelListResponseDto::new)
                 .collect(Collectors.toList());
 
-        for(int i = 0; i < findChannels.size(); i++)
-            if(userId != findChannels.get(i).getOwner())
+        for (int i = 0; i < findChannels.size(); i++)
+            if (userId != findChannels.get(i).getOwner())
                 findChannels.get(i).setOwner(-1L);
 
         return findChannels;
     }
 
     @Transactional
-    public Long update(Long userId, Long channelId, ChannelSaveRequestDto requestDto){
-        //게시글이 있는지 확인
-        Channel channel = channelRepository.findById(channelId).orElseThrow(() -> new
-                IllegalArgumentException("해당 게시글이 없습니다. id" + channelId));
+    public int update(SessionUser user, Long channelId, ChannelUpdateRequestDto requestDto) {
 
-        //해당 멤버인지 확인
-        if(!channel.getUsers().contains(userId)){
-            throw new IllegalArgumentException("해당 채널의 멤버가 아닙니다. userId" + userId + " channelId " + channelId);
-        }
+        Channel findChannel = channelRepository.findById(channelId).orElse(null);
 
-        //channel.update(requestDto.getFirstSchool(), requestDto.getSecondSchool(), requestDto.getDescription(), requestDto.getCategory(), requestDto.getFirstPicture(), requestDto.getSecondPicture());
+        if (findChannel == null)
+            return -2;
+        else if (findChannel.getOwner() != user.getId())
+            return -1;
 
-        return channelId;
+        findChannel.update(requestDto);
+
+        return 1;
     }
 
     @Transactional
-    public void delete (Long channelId){
-        //update 와 비슷하게 채널에속한 멤버만 삭제 가능하게 할까?
-        Channel channel = channelRepository.findById(channelId).orElseThrow(() -> new
-                IllegalArgumentException("삭제 단계에서 해당 Channel이 없습니다. chennelId = " + channelId));
+    public int delete(Long channelId, SessionUser user) {
 
-        channelRepository.delete(channel);
+        Channel findChannel = channelRepository.findById(channelId).orElse(null);
+
+        if (findChannel == null)
+            return -2;
+        else if (findChannel.getOwner() != user.getId())
+            return -1;
+
+        channelRepository.delete(findChannel);
+
+        return 1;
     }
 }
