@@ -42,5 +42,9 @@ dependencies {
 
     compile('org.mariadb.jdbc:mariadb-java-client')
 
+    //aws s3
+    compile('org.springframework.cloud:spring-cloud-aws-context:2.2.1.RELEASE')
+    compile('org.springframework.boot:spring-boot-starter-thymeleaf')
+
     testCompile('org.springframework.boot:spring-boot-starter-test')
 }

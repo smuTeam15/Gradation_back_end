@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.team15.gradation.config.auth.LoginUser;
 import org.team15.gradation.config.auth.dto.SessionUser;
+import org.team15.gradation.service.S3Service;
 import org.team15.gradation.service.channel.ChannelService;
 import org.team15.gradation.web.dto.channel.ChannelListResponseDto;
 import org.team15.gradation.web.dto.channel.ChannelSaveRequestDto;
@@ -20,6 +21,7 @@ import java.util.List;
 public class ChannelController {
 
     private final ChannelService channelService;
+    private final S3Service s3Service;
 
     @PostMapping("/api/v1/channel")
     public Long save(@RequestParam("firstPicture") MultipartFile firstPicture,
@@ -30,9 +32,14 @@ public class ChannelController {
                      @RequestParam("secondSchool") String secondSchool,
                      @LoginUser SessionUser user) throws IOException {
 
-        ChannelSaveRequestDto requestDto = new ChannelSaveRequestDto(firstSchool, secondSchool, description, category, firstPicture.getBytes(), secondPicture.getBytes(), user.getId());
+        ChannelSaveRequestDto requestDto = new ChannelSaveRequestDto(firstSchool, secondSchool, description, category, user.getId());
 
-        return channelService.save(requestDto, user);
+        Long save = channelService.save(requestDto, user);
+
+        s3Service.upload("FirstPicture", save.toString(), firstPicture);
+        s3Service.upload("SecondPicture", save.toString(), secondPicture);
+
+        return save;
     }
 
     @GetMapping("/api/v1/channel1")

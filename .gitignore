@@ -2,5 +2,6 @@
 /.gradle/
 .idea
 application-oauth.properties
+application-s3.properties
 
 build
