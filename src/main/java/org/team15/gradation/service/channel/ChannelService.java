@@ -46,32 +46,32 @@ public class ChannelService {
     }
 
     @Transactional
-    public int update(SessionUser user, Long channelId, ChannelUpdateRequestDto requestDto) {
+    public Long update(SessionUser user, Long channelId, ChannelUpdateRequestDto requestDto) {
 
         Channel findChannel = channelRepository.findById(channelId).orElse(null);
 
         if (findChannel == null)
-            return -2;
+            return -2L;
         else if (findChannel.getOwner() != user.getId())
-            return -1;
+            return -1L;
 
         findChannel.update(requestDto);
 
-        return 1;
+        return channelId;
     }
 
     @Transactional
-    public int delete(Long channelId, SessionUser user) {
+    public Long delete(Long channelId, SessionUser user) {
 
         Channel findChannel = channelRepository.findById(channelId).orElse(null);
 
         if (findChannel == null)
-            return -2;
+            return -2L;
         else if (findChannel.getOwner() != user.getId())
-            return -1;
+            return -1L;
 
         channelRepository.delete(findChannel);
 
-        return 1;
+        return channelId;
     }
 }

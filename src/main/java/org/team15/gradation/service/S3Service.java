@@ -44,16 +44,20 @@ public class S3Service {
                 .build();
     }
 
-    public String upload(String prefix, String id, MultipartFile file) throws IOException {
-        //목적과 id값을 기반으로 삽입
-        //목적 : firstPicture_ secondPicture_등
-        //뒤에는 관련 엔티티의 키값이 오면 좋을거같은데
-
+    public void upload(String prefix, String id, MultipartFile file) throws IOException {
         String fileName = prefix + "_" + id;
+
+        if (s3Client.doesObjectExist(bucket, fileName))
+            s3Client.deleteObject(bucket, fileName);
 
         s3Client.putObject(new PutObjectRequest(bucket, fileName, file.getInputStream(), null)
                 .withCannedAcl(CannedAccessControlList.PublicRead));
+    }
 
-        return s3Client.getUrl(bucket, fileName).toString();
+    public void delete(String prefix, String id) {
+        String fileName = prefix + "_" + id;
+
+        if (s3Client.doesObjectExist(bucket, fileName))
+            s3Client.deleteObject(bucket, fileName);
     }
 }

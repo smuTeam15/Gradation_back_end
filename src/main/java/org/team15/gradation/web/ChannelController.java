@@ -60,30 +60,34 @@ public class ChannelController {
 
         ChannelUpdateRequestDto requestDto = new ChannelUpdateRequestDto(firstSchool, secondSchool, description, category, firstPicture.getBytes(), secondPicture.getBytes());
 
-        final int result = channelService.update(user, channelId, requestDto);
+        final Long result = channelService.update(user, channelId, requestDto);
 
-        switch (result) {
-            case -1:
-                return new ResponseEntity(HttpStatus.FORBIDDEN);
-            case -2:
-                return new ResponseEntity(HttpStatus.NO_CONTENT);
-            default:
-                return new ResponseEntity(HttpStatus.OK);
+        if (result == -1L) {
+            return new ResponseEntity(HttpStatus.FORBIDDEN);
+        } else if (result == -2L) {
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
         }
+
+        s3Service.upload("FirstPicture", result.toString(), firstPicture);
+        s3Service.upload("SecondPicture", result.toString(), secondPicture);
+
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     @DeleteMapping("/api/v1/channel/{channelId}")
     public ResponseEntity delete(@PathVariable Long channelId, @LoginUser SessionUser user) {
 
-        final int result = channelService.delete(channelId, user);
+        final Long result = channelService.delete(channelId, user);
 
-        switch (result) {
-            case -1:
-                return new ResponseEntity(HttpStatus.FORBIDDEN);
-            case -2:
-                return new ResponseEntity(HttpStatus.NO_CONTENT);
-            default:
-                return new ResponseEntity(HttpStatus.OK);
+        if (result == -1) {
+            return new ResponseEntity(HttpStatus.FORBIDDEN);
+        } else if (result == -2) {
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
         }
+
+        s3Service.delete("FirstPicture", result.toString());
+        s3Service.delete("SecondPicture", result.toString());
+
+        return new ResponseEntity(HttpStatus.OK);
     }
 }
