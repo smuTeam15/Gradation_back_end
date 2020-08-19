@@ -18,7 +18,7 @@ import java.io.IOException;
 @NoArgsConstructor
 @Service
 public class S3Service {
-    public static final String CLOUD_FRONT_DOMAIN_NAME = "d359xsrpr7zpmy.cloudfront.net/";
+    public static final String CLOUD_FRONT_DOMAIN_NAME = "https://d359xsrpr7zpmy.cloudfront.net/";
 
     private AmazonS3 s3Client;
 
