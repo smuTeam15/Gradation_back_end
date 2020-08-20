@@ -31,7 +31,7 @@ public class WeeklyTopicService {
 
         if (findChannel == null)
             return new ResponseEntity(HttpStatus.NO_CONTENT);
-        else if (findChannel.getOwner() != user.getId())
+        else if (!findChannel.getOwner().equals(user.getId()))
             return new ResponseEntity(HttpStatus.FORBIDDEN);
 
         WeeklyTopic weeklyTopic = requestDto.toEntity();
@@ -88,7 +88,7 @@ public class WeeklyTopicService {
 
         if (findChannel == null)
             return new ResponseEntity(HttpStatus.NO_CONTENT);
-        else if (findChannel.getOwner() != user.getId())
+        else if (!findChannel.getOwner().equals(user.getId()))
             return new ResponseEntity(HttpStatus.FORBIDDEN);
 
         WeeklyTopic findWeeklyTopic = weeklyTopicRepository.findById(weeklyTopicId).orElse(null);
