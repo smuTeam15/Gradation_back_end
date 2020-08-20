@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.team15.gradation.domain.channel.Channel;
+import org.team15.gradation.web.dto.dailymission.DailyMissionUpdateRequestDto;
 
 import javax.persistence.*;
 
@@ -30,7 +31,12 @@ public class DailyMission {
         this.channel = channel;
     }
 
-    public void setChannel(Channel channel) {
+    public void createDailyMission(Channel channel){
         this.channel = channel;
+        channel.getDailyMissions().add(this);
+    }
+
+    public void update(String content) {
+        this.content = content;
     }
 }

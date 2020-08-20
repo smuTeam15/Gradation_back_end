@@ -39,7 +39,7 @@ public class Channel {
     @Column(nullable = false)
     private Long owner;
 
-    @ManyToMany(mappedBy = "channels")
+    @ManyToMany(mappedBy = "channels", fetch = FetchType.LAZY)
     private List<User> users = new ArrayList<>();
 
     @OneToMany(mappedBy = "channel", fetch = FetchType.LAZY)
