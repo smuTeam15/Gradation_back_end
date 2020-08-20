@@ -39,7 +39,7 @@ public class ChannelService {
                 .collect(Collectors.toList());
 
         for (int i = 0; i < findChannels.size(); i++)
-            if (userId != findChannels.get(i).getOwner())
+            if (userId.equals(findChannels.get(i).getOwner()))
                 findChannels.get(i).setOwner(-1L);
 
         return findChannels;
