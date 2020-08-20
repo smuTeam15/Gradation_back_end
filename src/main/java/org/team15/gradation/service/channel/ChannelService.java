@@ -7,7 +7,7 @@ import org.team15.gradation.config.auth.dto.SessionUser;
 import org.team15.gradation.domain.channel.Channel;
 import org.team15.gradation.domain.channel.ChannelRepository;
 import org.team15.gradation.domain.user.UserRepository;
-import org.team15.gradation.web.dto.channel.ChannelListResponseDto;
+import org.team15.gradation.web.dto.channel.ChannelResponseDto;
 import org.team15.gradation.web.dto.channel.ChannelSaveRequestDto;
 import org.team15.gradation.web.dto.channel.ChannelUpdateRequestDto;
 
@@ -32,10 +32,10 @@ public class ChannelService {
     }
 
     @Transactional(readOnly = true)
-    public List<ChannelListResponseDto> findMyChannel(Long userId) {
-        List<ChannelListResponseDto> findChannels = userRepository.findById(userId).get().getChannels()
+    public List<ChannelResponseDto> findMyChannel(Long userId) {
+        List<ChannelResponseDto> findChannels = userRepository.findById(userId).get().getChannels()
                 .stream()
-                .map(ChannelListResponseDto::new)
+                .map(ChannelResponseDto::new)
                 .collect(Collectors.toList());
 
         for (int i = 0; i < findChannels.size(); i++)

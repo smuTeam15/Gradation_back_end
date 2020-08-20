@@ -7,7 +7,7 @@ import org.team15.gradation.service.S3Service;
 
 @Getter
 @NoArgsConstructor
-public class ChannelListResponseDto {
+public class ChannelResponseDto {
 
     private Long id;
     private String firstSchool;
@@ -18,7 +18,7 @@ public class ChannelListResponseDto {
     private String secondPicture;
     private Long owner;
 
-    public ChannelListResponseDto(Channel entity) {
+    public ChannelResponseDto(Channel entity) {
         this.id = entity.getId();
         this.firstSchool = entity.getFirstSchool();
         this.secondSchool = entity.getSecondSchool();

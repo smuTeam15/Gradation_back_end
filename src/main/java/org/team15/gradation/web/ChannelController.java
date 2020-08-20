@@ -9,7 +9,7 @@ import org.team15.gradation.config.auth.LoginUser;
 import org.team15.gradation.config.auth.dto.SessionUser;
 import org.team15.gradation.service.S3Service;
 import org.team15.gradation.service.channel.ChannelService;
-import org.team15.gradation.web.dto.channel.ChannelListResponseDto;
+import org.team15.gradation.web.dto.channel.ChannelResponseDto;
 import org.team15.gradation.web.dto.channel.ChannelSaveRequestDto;
 import org.team15.gradation.web.dto.channel.ChannelUpdateRequestDto;
 
@@ -34,7 +34,7 @@ public class ChannelController {
 
         ChannelSaveRequestDto requestDto = new ChannelSaveRequestDto(firstSchool, secondSchool, description, category, user.getId());
 
-        Long save = channelService.save(requestDto, user);
+        final Long save = channelService.save(requestDto, user);
 
         s3Service.upload("FirstPicture", save.toString(), firstPicture);
         s3Service.upload("SecondPicture", save.toString(), secondPicture);
@@ -43,7 +43,7 @@ public class ChannelController {
     }
 
     @GetMapping("/api/v1/channel1")
-    public List<ChannelListResponseDto> findById(@LoginUser SessionUser user) {
+    public List<ChannelResponseDto> findById(@LoginUser SessionUser user) {
 
         return channelService.findMyChannel(user.getId());
     }
