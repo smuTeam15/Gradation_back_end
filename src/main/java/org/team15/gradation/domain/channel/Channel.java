@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import org.team15.gradation.domain.dailymission.DailyMission;
 import org.team15.gradation.domain.post.Post;
 import org.team15.gradation.domain.user.User;
-import org.team15.gradation.domain.weeklyTopic.weeklyTopic;
+import org.team15.gradation.domain.weeklytopic.WeeklyTopic;
 import org.team15.gradation.web.dto.channel.ChannelUpdateRequestDto;
 
 import javax.persistence.*;
@@ -49,7 +49,7 @@ public class Channel {
     private List<Post> posts = new ArrayList<>();
 
     @OneToMany(mappedBy = "channel", fetch = FetchType.LAZY)
-    private List<weeklyTopic> weeklyTopics = new ArrayList<>();
+    private List<WeeklyTopic> weeklyTopics = new ArrayList<>();
 
     @Builder
     public Channel(String firstSchool, String secondSchool, String description, String category, Long owner) {
