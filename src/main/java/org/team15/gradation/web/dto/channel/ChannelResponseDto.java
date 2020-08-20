@@ -23,7 +23,7 @@ public class ChannelResponseDto {
         this.firstSchool = entity.getFirstSchool();
         this.secondSchool = entity.getSecondSchool();
         this.description = entity.getDescription();
-        this.category = entity.getDescription();
+        this.category = entity.getCategory();
         this.owner = entity.getOwner();
         this.firstPicture = S3Service.CLOUD_FRONT_DOMAIN_NAME + "FirstPicture_" + entity.getId();
         this.secondPicture = S3Service.CLOUD_FRONT_DOMAIN_NAME + "SecondPicture_" + entity.getId();
