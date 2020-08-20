@@ -9,7 +9,7 @@ import org.team15.gradation.config.auth.LoginUser;
 import org.team15.gradation.config.auth.dto.SessionUser;
 import org.team15.gradation.service.S3Service;
 import org.team15.gradation.service.channel.ChannelService;
-import org.team15.gradation.web.dto.channel.ChannelListResponseDto;
+import org.team15.gradation.web.dto.channel.ChannelResponseDto;
 import org.team15.gradation.web.dto.channel.ChannelSaveRequestDto;
 import org.team15.gradation.web.dto.channel.ChannelUpdateRequestDto;
 
@@ -34,7 +34,7 @@ public class ChannelController {
 
         ChannelSaveRequestDto requestDto = new ChannelSaveRequestDto(firstSchool, secondSchool, description, category, user.getId());
 
-        Long save = channelService.save(requestDto, user);
+        final Long save = channelService.save(requestDto, user);
 
         s3Service.upload("FirstPicture", save.toString(), firstPicture);
         s3Service.upload("SecondPicture", save.toString(), secondPicture);
@@ -43,7 +43,7 @@ public class ChannelController {
     }
 
     @GetMapping("/api/v1/channel1")
-    public List<ChannelListResponseDto> findById(@LoginUser SessionUser user) {
+    public List<ChannelResponseDto> findById(@LoginUser SessionUser user) {
 
         return channelService.findMyChannel(user.getId());
     }
@@ -60,30 +60,34 @@ public class ChannelController {
 
         ChannelUpdateRequestDto requestDto = new ChannelUpdateRequestDto(firstSchool, secondSchool, description, category, firstPicture.getBytes(), secondPicture.getBytes());
 
-        final int result = channelService.update(user, channelId, requestDto);
+        final Long result = channelService.update(user, channelId, requestDto);
 
-        switch (result) {
-            case -1:
-                return new ResponseEntity(HttpStatus.FORBIDDEN);
-            case -2:
-                return new ResponseEntity(HttpStatus.NO_CONTENT);
-            default:
-                return new ResponseEntity(HttpStatus.OK);
+        if (result == -1L) {
+            return new ResponseEntity(HttpStatus.FORBIDDEN);
+        } else if (result == -2L) {
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
         }
+
+        s3Service.upload("FirstPicture", result.toString(), firstPicture);
+        s3Service.upload("SecondPicture", result.toString(), secondPicture);
+
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     @DeleteMapping("/api/v1/channel/{channelId}")
     public ResponseEntity delete(@PathVariable Long channelId, @LoginUser SessionUser user) {
 
-        final int result = channelService.delete(channelId, user);
+        final Long result = channelService.delete(channelId, user);
 
-        switch (result) {
-            case -1:
-                return new ResponseEntity(HttpStatus.FORBIDDEN);
-            case -2:
-                return new ResponseEntity(HttpStatus.NO_CONTENT);
-            default:
-                return new ResponseEntity(HttpStatus.OK);
+        if (result == -1) {
+            return new ResponseEntity(HttpStatus.FORBIDDEN);
+        } else if (result == -2) {
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
         }
+
+        s3Service.delete("FirstPicture", result.toString());
+        s3Service.delete("SecondPicture", result.toString());
+
+        return new ResponseEntity(HttpStatus.OK);
     }
 }

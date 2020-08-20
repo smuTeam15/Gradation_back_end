@@ -6,5 +6,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class DailyMissionUpdateRequestDto {
+    private Long id;
     private String content;
 }

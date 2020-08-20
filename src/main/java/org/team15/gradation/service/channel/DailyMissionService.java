@@ -1,6 +1,8 @@
 package org.team15.gradation.service.channel;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.team15.gradation.config.auth.LoginUser;
@@ -14,7 +16,6 @@ import org.team15.gradation.web.dto.dailymission.DailyMissionSaveRequestDto;
 import org.team15.gradation.web.dto.dailymission.DailyMissionUpdateRequestDto;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -24,67 +25,81 @@ public class DailyMissionService {
     private final ChannelRepository channelRepository;
 
     @Transactional
-    public Long save(DailyMissionSaveRequestDto requestDto, SessionUser user) {
-        // + 현재 요청의 request에 있는 channelId에서 user가 owner인지 확인하고 insert
-        //requestDto 에서 채널 ID를 꺼내와서 매핑을 해줍시다.
+    public ResponseEntity save(DailyMissionSaveRequestDto requestDto, SessionUser user) {
 
-        //TODO: 한번의 select
-        Optional<Channel> byId = channelRepository.findById(requestDto.getChannelId());
+        Channel findChannel = channelRepository.findById(requestDto.getChannelId()).orElse(null);
 
-        byId.orElseThrow(() -> new IllegalArgumentException("해당 채널이 없습니다. channelId : " + requestDto.getChannelId()));
+        if (findChannel == null)
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
+        else if (findChannel.getOwner() != user.getId())
+            return new ResponseEntity(HttpStatus.FORBIDDEN);
 
-        Channel findChannel = byId.get();
-
-        //user is not owner
-        if (findChannel.getOwner() != user.getId()) {
-            return -1L;
-        }
-
-        // 단방향 테스트  먼저
-        //TODO : 단방향, 양방향 되나 안되나 모릅니다 양방향이 맞는거같은디? 잘생각해보면 미션에서 채널을 찾아가지 않는다.
-        //saveDailyMission을 사용한 이유 : requestDto의 channelId를 dailyMission 객체에 직접 넣을수가 없다.
-        //dailyMissionRepository.saveDailyMission(requestDto.getContent(), requestDto.getChannelId());
-
-        // 양방향 매핑
-        Channel findCurrChannel = channelRepository.findById(requestDto.getChannelId()).get();
         DailyMission dailyMission = new DailyMission().builder()
                 .content(requestDto.getContent())
-                .channel(findCurrChannel)
+                .channel(findChannel)
                 .build();
 
-        findCurrChannel.getDailyMissions().add(requestDto.toEntity());
-        dailyMission.setChannel(findCurrChannel);
+        dailyMission.createDailyMission(findChannel);
+        dailyMissionRepository.save(dailyMission).getId();
 
-        return 2L;
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     @Transactional
-    public List<DailyMissionResponseDto> findMyDailyMission(Long channelId, @LoginUser SessionUser user) {
+    public ResponseEntity findMyDailyMission(Long channelId, @LoginUser SessionUser user) {
 
-        //channel에서 가져오서 권한 부터 확인
         Channel findChannel = channelRepository.findById(channelId).orElse(null);
 
-        if(findChannel.getOwner() != user.getId())
-            return null;
+        if (findChannel == null)
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
+        else if (findChannel.isMember(user.getId()))
+            return new ResponseEntity(HttpStatus.FORBIDDEN);
 
-        return findChannel.getDailyMissions()
+        List<DailyMissionResponseDto> dailyMissions = findChannel.getDailyMissions()
                 .stream()
                 .map(DailyMissionResponseDto::new)
                 .collect(Collectors.toList());
+
+        return new ResponseEntity(dailyMissions, HttpStatus.OK);
     }
 
     @Transactional
-    public void update(DailyMissionUpdateRequestDto requestDto, SessionUser user) {
+    public ResponseEntity update(Long channelId, DailyMissionUpdateRequestDto requestDto, SessionUser user) {
 
+        Channel findChannel = channelRepository.findById(channelId).orElse(null);
+
+        if (findChannel == null)
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
+        else if (findChannel.getOwner() != user.getId())
+            return new ResponseEntity(HttpStatus.FORBIDDEN);
+
+        DailyMission findDailyMission = dailyMissionRepository.findById(requestDto.getId()).orElse(null);
+
+        if (findDailyMission == null)
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
+
+        findDailyMission.update(requestDto.getContent());
+
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     @Transactional
-    public int delete(Long channelId, Long dailyMissionId, SessionUser user) {
-        System.out.println("============================= Start ====================");
-        Optional<Channel> channel = channelRepository.findById(channelId);
-        System.out.println("============================= Finish find ==============");
-        channel.orElseThrow(() -> new IllegalArgumentException("IllegalArg"));
+    public ResponseEntity delete(Long channelId, Long dailyMissionId, SessionUser user) {
 
-        return 1;
+        Channel findChannel = channelRepository.findById(channelId).orElse(null);
+
+        if (findChannel == null)
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
+        else if (findChannel.getOwner() != user.getId())
+            return new ResponseEntity(HttpStatus.FORBIDDEN);
+
+        DailyMission findDailyMission = dailyMissionRepository.findById(dailyMissionId).orElse(null);
+
+        if (findDailyMission == null)
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
+
+        dailyMissionRepository.delete(findDailyMission);
+
+        return new ResponseEntity(HttpStatus.OK);
     }
 }

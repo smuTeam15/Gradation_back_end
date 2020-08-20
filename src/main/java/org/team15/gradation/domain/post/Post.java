@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.team15.gradation.domain.channel.Channel;
 import org.team15.gradation.domain.like.Likes;
+import org.team15.gradation.domain.post.comment.PostComment;
 import org.team15.gradation.domain.user.User;
 
 import javax.persistence.*;
@@ -21,11 +22,11 @@ public class Post {
     @Column(name = "post_id")
     private Long id;
 
-    @Column
-    private byte[] picture;
-
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
+
+    @OneToMany(mappedBy = "post")
+    private List<PostComment> postComments = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -39,10 +40,15 @@ public class Post {
     private List<Likes> likes = new ArrayList<>();
 
     @Builder
-    public Post(byte[] picture, String content, User user, Channel channel) {
-        this.picture = picture;
+    public Post(String content, User user, Channel channel) {
         this.content = content;
         this.user = user;
         this.channel = channel;
+    }
+
+    public void makePost(Channel channel, User user) {
+        this.channel = channel;
+        this.user = user;
+        channel.getPosts().add(this);
     }
 }
