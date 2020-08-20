@@ -7,11 +7,11 @@ import org.team15.gradation.domain.dailymission.DailyMission;
 @Getter
 @NoArgsConstructor
 public class DailyMissionResponseDto {
-    private Long dailyMissionId;
+    private Long id;
     private String content;
 
     public DailyMissionResponseDto(DailyMission entity) {
-        this.dailyMissionId = entity.getId();
+        this.id = entity.getId();
         this.content = entity.getContent();
     }
 }
