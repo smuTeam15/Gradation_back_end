@@ -40,7 +40,7 @@ public class DailyMissionService {
                 .build();
 
         dailyMission.createDailyMission(findChannel);
-        dailyMissionRepository.save(dailyMission).getId();
+        dailyMissionRepository.save(dailyMission);
 
         return new ResponseEntity(HttpStatus.OK);
     }
