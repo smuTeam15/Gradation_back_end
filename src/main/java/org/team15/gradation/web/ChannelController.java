@@ -79,9 +79,9 @@ public class ChannelController {
 
         final Long result = channelService.delete(channelId, user);
 
-        if (result == -1) {
+        if (result == -1L) {
             return new ResponseEntity(HttpStatus.FORBIDDEN);
-        } else if (result == -2) {
+        } else if (result == -2L) {
             return new ResponseEntity(HttpStatus.NO_CONTENT);
         }
 
