@@ -52,7 +52,6 @@ public class WeeklyTopicService {
         else if (!findChannel.isMember(user.getId()))
             return new ResponseEntity(HttpStatus.FORBIDDEN);
 
-        //TODO : 데이터가 어떻게 반환이 될까요.
         List<WeeklyTopicResponseDto> weeklyTopics = findChannel.getWeeklyTopics()
                 .stream()
                 .map(WeeklyTopicResponseDto::new)
