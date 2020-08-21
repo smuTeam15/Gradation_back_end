@@ -21,18 +21,19 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Service
 public class DailyMissionService {
+
     private final DailyMissionRepository dailyMissionRepository;
     private final ChannelRepository channelRepository;
 
     @Transactional
-    public ResponseEntity save(DailyMissionSaveRequestDto requestDto, SessionUser user) {
+    public Long save(DailyMissionSaveRequestDto requestDto, SessionUser user) {
 
         Channel findChannel = channelRepository.findById(requestDto.getChannelId()).orElse(null);
 
         if (findChannel == null)
-            return new ResponseEntity(HttpStatus.NO_CONTENT);
+            return -2L;
         else if (!findChannel.getOwner().equals(user.getId()))
-            return new ResponseEntity(HttpStatus.FORBIDDEN);
+            return -1L;
 
         DailyMission dailyMission = new DailyMission().builder()
                 .content(requestDto.getContent())
@@ -40,9 +41,8 @@ public class DailyMissionService {
                 .build();
 
         dailyMission.createDailyMission(findChannel);
-        dailyMissionRepository.save(dailyMission);
 
-        return new ResponseEntity(HttpStatus.OK);
+        return dailyMissionRepository.save(dailyMission).getId();
     }
 
     @Transactional
@@ -64,42 +64,42 @@ public class DailyMissionService {
     }
 
     @Transactional
-    public ResponseEntity update(Long channelId, DailyMissionUpdateRequestDto requestDto, SessionUser user) {
+    public Long update(Long channelId, DailyMissionUpdateRequestDto requestDto, SessionUser user) {
 
         Channel findChannel = channelRepository.findById(channelId).orElse(null);
 
         if (findChannel == null)
-            return new ResponseEntity(HttpStatus.NO_CONTENT);
+            return -2L;
         else if (findChannel.getOwner() != user.getId())
-            return new ResponseEntity(HttpStatus.FORBIDDEN);
+            return -1L;
 
         DailyMission findDailyMission = dailyMissionRepository.findById(requestDto.getId()).orElse(null);
 
         if (findDailyMission == null)
-            return new ResponseEntity(HttpStatus.NO_CONTENT);
+            return -2L;
 
         findDailyMission.update(requestDto.getContent());
 
-        return new ResponseEntity(HttpStatus.OK);
+        return channelId;
     }
 
     @Transactional
-    public ResponseEntity delete(Long channelId, Long dailyMissionId, SessionUser user) {
+    public Long delete(Long channelId, Long dailyMissionId, SessionUser user) {
 
         Channel findChannel = channelRepository.findById(channelId).orElse(null);
 
         if (findChannel == null)
-            return new ResponseEntity(HttpStatus.NO_CONTENT);
+            return -2L;
         else if (findChannel.getOwner() != user.getId())
-            return new ResponseEntity(HttpStatus.FORBIDDEN);
+            return -1L;
 
         DailyMission findDailyMission = dailyMissionRepository.findById(dailyMissionId).orElse(null);
 
         if (findDailyMission == null)
-            return new ResponseEntity(HttpStatus.NO_CONTENT);
+            return -2L;
 
         dailyMissionRepository.delete(findDailyMission);
 
-        return new ResponseEntity(HttpStatus.OK);
+        return channelId;
     }
 }

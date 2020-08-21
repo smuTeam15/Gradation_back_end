@@ -8,4 +8,9 @@ import lombok.NoArgsConstructor;
 public class DailyMissionUpdateRequestDto {
     private Long id;
     private String content;
+
+    public DailyMissionUpdateRequestDto(Long id, String content) {
+        this.id = id;
+        this.content = content;
+    }
 }
