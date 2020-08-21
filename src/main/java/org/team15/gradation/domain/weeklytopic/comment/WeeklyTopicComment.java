@@ -1,5 +1,6 @@
 package org.team15.gradation.domain.weeklytopic.comment;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.team15.gradation.domain.user.User;
@@ -26,4 +27,15 @@ public class WeeklyTopicComment {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    @Builder
+    public WeeklyTopicComment(String comment) {
+        this.comment = comment;
+    }
+
+    public void createWeeklyTopicComment(WeeklyTopic findWeeklyTopic, User currUser) {
+        weeklyTopic = findWeeklyTopic;
+        user = currUser;
+        findWeeklyTopic.getWeeklyTopicComments().add(this);
+    }
 }
