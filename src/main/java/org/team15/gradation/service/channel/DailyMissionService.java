@@ -52,7 +52,7 @@ public class DailyMissionService {
 
         if (findChannel == null)
             return new ResponseEntity(HttpStatus.NO_CONTENT);
-        else if (findChannel.isMember(user.getId()))
+        else if (!findChannel.isMember(user.getId()))
             return new ResponseEntity(HttpStatus.FORBIDDEN);
 
         List<DailyMissionResponseDto> dailyMissions = findChannel.getDailyMissions()
