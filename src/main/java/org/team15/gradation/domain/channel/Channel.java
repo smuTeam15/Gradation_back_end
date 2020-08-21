@@ -70,7 +70,7 @@ public class Channel {
     public boolean isMember(Long userId) {
 
         for (User user : users) {
-            if (user.getId() == userId)
+            if (user.getId().equals(userId))
                 return true;
         }
 

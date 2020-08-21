@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.team15.gradation.domain.channel.Channel;
 import org.team15.gradation.domain.weeklytopic.comment.WeeklyTopicComment;
+import org.team15.gradation.web.dto.weeklytopic.WeeklyTopicUpdateRequestDto;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -37,7 +38,8 @@ public class WeeklyTopic {
     private Channel channel;
 
     @Builder
-    public WeeklyTopic(String title, String category, String content) {
+    public WeeklyTopic(Long id, String title, String category, String content) {
+        this.id = id;
         this.title = title;
         this.category = category;
         this.content = content;
@@ -46,5 +48,11 @@ public class WeeklyTopic {
     public void createWeeklyTopic(Channel channel) {
         this.channel = channel;
         channel.getWeeklyTopics().add(this);
+    }
+
+    public void update(WeeklyTopicUpdateRequestDto requestDto) {
+        this.title = requestDto.getTitle();
+        this.category = requestDto.getCategory();
+        this.content = requestDto.getContent();
     }
 }

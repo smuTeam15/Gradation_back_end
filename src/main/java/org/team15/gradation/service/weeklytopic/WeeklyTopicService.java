@@ -4,13 +4,18 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.team15.gradation.config.auth.dto.SessionUser;
 import org.team15.gradation.domain.channel.Channel;
 import org.team15.gradation.domain.channel.ChannelRepository;
-import org.team15.gradation.domain.user.UserRepository;
 import org.team15.gradation.domain.weeklytopic.WeeklyTopic;
 import org.team15.gradation.domain.weeklytopic.WeeklyTopicRepository;
+import org.team15.gradation.web.dto.weeklytopic.WeeklyTopicResponseDto;
 import org.team15.gradation.web.dto.weeklytopic.WeeklyTopicSaveRequestDto;
+import org.team15.gradation.web.dto.weeklytopic.WeeklyTopicUpdateRequestDto;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -19,19 +24,79 @@ public class WeeklyTopicService {
     private final ChannelRepository channelRepository;
     private final WeeklyTopicRepository weeklyTopicRepository;
 
+    @Transactional
     public ResponseEntity save(WeeklyTopicSaveRequestDto requestDto, SessionUser user) {
 
         Channel findChannel = channelRepository.findById(requestDto.getChannelId()).orElse(null);
 
         if (findChannel == null)
             return new ResponseEntity(HttpStatus.NO_CONTENT);
-        else if (findChannel.getOwner() != user.getId())
+        else if (!findChannel.getOwner().equals(user.getId()))
             return new ResponseEntity(HttpStatus.FORBIDDEN);
 
         WeeklyTopic weeklyTopic = requestDto.toEntity();
         weeklyTopic.createWeeklyTopic(findChannel);
 
         weeklyTopicRepository.save(weeklyTopic);
+
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @Transactional
+    public ResponseEntity findWeeklyTopic(Long channelId, SessionUser user) {
+
+        Channel findChannel = channelRepository.findById(channelId).orElse(null);
+
+        if (findChannel == null)
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
+        else if (!findChannel.isMember(user.getId()))
+            return new ResponseEntity(HttpStatus.FORBIDDEN);
+
+        //TODO : 데이터가 어떻게 반환이 될까요.
+        List<WeeklyTopicResponseDto> weeklyTopics = findChannel.getWeeklyTopics()
+                .stream()
+                .map(WeeklyTopicResponseDto::new)
+                .collect(Collectors.toList());
+
+        return new ResponseEntity(weeklyTopics, HttpStatus.OK);
+    }
+
+    @Transactional
+    public ResponseEntity update(Long channelId, WeeklyTopicUpdateRequestDto requestDto, SessionUser user) {
+
+        Channel findChannel = channelRepository.findById(channelId).orElse(null);
+
+        if (findChannel == null)
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
+        else if (!findChannel.getOwner().equals(user.getId()))
+            return new ResponseEntity(HttpStatus.FORBIDDEN);
+
+        WeeklyTopic findWeeklyTopic = weeklyTopicRepository.findById(requestDto.getId()).orElse(null);
+
+        if (findWeeklyTopic == null)
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
+
+        findWeeklyTopic.update(requestDto);
+
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @Transactional
+    public ResponseEntity delete(Long channelId, Long weeklyTopicId, SessionUser user) {
+
+        Channel findChannel = channelRepository.findById(channelId).orElse(null);
+
+        if (findChannel == null)
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
+        else if (!findChannel.getOwner().equals(user.getId()))
+            return new ResponseEntity(HttpStatus.FORBIDDEN);
+
+        WeeklyTopic findWeeklyTopic = weeklyTopicRepository.findById(weeklyTopicId).orElse(null);
+
+        if (findWeeklyTopic == null)
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
+
+        weeklyTopicRepository.delete(findWeeklyTopic);
 
         return new ResponseEntity(HttpStatus.OK);
     }
