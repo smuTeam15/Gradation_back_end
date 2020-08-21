@@ -1,0 +1,19 @@
+package org.team15.gradation.web.dto.post;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.team15.gradation.domain.post.comment.PostComment;
+
+@Getter
+@NoArgsConstructor
+public class PostCommentResponseDto {
+    private Long commentId;
+    private String userName;
+    private String comment;
+
+    public PostCommentResponseDto(PostComment entity) {
+        this.commentId = entity.getId();
+        this.userName = entity.getUser().getName();
+        this.comment = entity.getComment();
+    }
+}

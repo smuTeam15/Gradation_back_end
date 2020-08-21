@@ -30,9 +30,9 @@ public class PostController {
 
         final Long save = postService.save(requestDto);
 
-        if (save == -1) {
+        if (save == -1L) {
             return new ResponseEntity(HttpStatus.FORBIDDEN);
-        } else if (save == -2) {
+        } else if (save == -2L) {
             return new ResponseEntity(HttpStatus.NO_CONTENT);
         }
 
