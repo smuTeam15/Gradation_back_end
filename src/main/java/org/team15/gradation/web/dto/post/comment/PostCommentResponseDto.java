@@ -1,4 +1,4 @@
-package org.team15.gradation.web.dto.post;
+package org.team15.gradation.web.dto.post.comment;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

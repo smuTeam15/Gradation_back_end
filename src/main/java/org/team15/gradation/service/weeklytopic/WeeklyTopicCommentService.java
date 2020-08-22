@@ -70,6 +70,7 @@ public class WeeklyTopicCommentService {
         if (findWeeklyTopicComment == null)
             return new ResponseEntity(HttpStatus.NO_CONTENT);
 
+        //TODO : Comment 가 있으면 topic도 이미 존재하는 상태, cascasde
         WeeklyTopic findWeeklyTopic = findWeeklyTopicComment.getWeeklyTopic();
 
         if (!findWeeklyTopic.getChannel().isMember(user.getId()))

@@ -1,8 +1,8 @@
-package org.team15.gradation.web.dto.post;
+package org.team15.gradation.web.dto.post.Likes;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.team15.gradation.domain.like.Likes;
+import org.team15.gradation.domain.likes.Likes;
 
 @Getter
 @NoArgsConstructor

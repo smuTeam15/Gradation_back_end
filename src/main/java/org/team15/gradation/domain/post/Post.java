@@ -4,9 +4,10 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.team15.gradation.domain.channel.Channel;
-import org.team15.gradation.domain.like.Likes;
+import org.team15.gradation.domain.likes.Likes;
 import org.team15.gradation.domain.post.comment.PostComment;
 import org.team15.gradation.domain.user.User;
+import org.team15.gradation.web.dto.PostUpdateRequestDto;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -50,5 +51,9 @@ public class Post {
         this.channel = channel;
         this.user = user;
         channel.getPosts().add(this);
+    }
+
+    public void update(PostUpdateRequestDto requestDto) {
+        this.content = requestDto.getContent();
     }
 }
