@@ -9,6 +9,7 @@ import org.team15.gradation.config.auth.LoginUser;
 import org.team15.gradation.config.auth.dto.SessionUser;
 import org.team15.gradation.service.S3Service;
 import org.team15.gradation.service.post.PostService;
+import org.team15.gradation.web.dto.PostUpdateRequestDto;
 import org.team15.gradation.web.dto.post.PostSaveRequestDto;
 
 import java.io.IOException;
@@ -30,9 +31,9 @@ public class PostController {
 
         final Long save = postService.save(requestDto);
 
-        if (save == -1) {
+        if (save == -1L) {
             return new ResponseEntity(HttpStatus.FORBIDDEN);
-        } else if (save == -2) {
+        } else if (save == -2L) {
             return new ResponseEntity(HttpStatus.NO_CONTENT);
         }
 
@@ -43,15 +44,29 @@ public class PostController {
 
     @GetMapping("/api/v1/post/{channelId}")
     public ResponseEntity findById(@PathVariable("channelId") Long channelId,
-                         @LoginUser SessionUser user) {
-        //채널에 들어오면 채널내 모든 post를 뱉어내고 각각 likes와 comment까지 뱉어야함
-        //그러면 필요한 채널 id를 주고 그 안에 user가 멤버로 속해있는지 확인 할것 ㅇㅋ?
+                                   @LoginUser SessionUser user) {
 
         return postService.findPosts(channelId, user);
     }
 
-    @PutMapping("/api/v1/post")
-    public void update() {
+    @PutMapping("/api/v1/post/{postId}")
+    public ResponseEntity update(@PathVariable("postId") Long postId,
+                                 @RequestParam("picture") MultipartFile picture,
+                                 @RequestParam("content") String content,
+                                 @LoginUser SessionUser user) throws IOException {
+
+        PostUpdateRequestDto requestDto = new PostUpdateRequestDto(content);
+
+        final Long result = postService.update(postId, requestDto, user);
+
+        if (result == -1L)
+            return new ResponseEntity(HttpStatus.FORBIDDEN);
+        else if (result == -2L)
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
+
+        s3Service.upload("Post", result.toString(), picture);
+
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     @DeleteMapping("/api/v1/post")

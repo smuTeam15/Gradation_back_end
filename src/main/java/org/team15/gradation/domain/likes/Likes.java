@@ -1,5 +1,6 @@
-package org.team15.gradation.domain.like;
+package org.team15.gradation.domain.likes;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.team15.gradation.domain.post.Post;
@@ -24,4 +25,15 @@ public class Likes {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    public Likes(Post post, User user) {
+        this.post = post;
+        this.user = user;
+    }
+
+    public void make(Post post, User user) {
+        this.post = post;
+        this.user = user;
+        post.getLikes().add(this);
+    }
 }

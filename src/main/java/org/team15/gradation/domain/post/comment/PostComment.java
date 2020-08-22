@@ -1,5 +1,6 @@
 package org.team15.gradation.domain.post.comment;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.team15.gradation.domain.post.Post;
@@ -19,11 +20,22 @@ public class PostComment {
 
     private String comment;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
     private Post post;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    @Builder
+    public PostComment(String comment) {
+        this.comment = comment;
+    }
+
+    public void make(Post findPost, User findUser) {
+        post = findPost;
+        user = findUser;
+        findPost.getPostComments().add(this);
+    }
 }
