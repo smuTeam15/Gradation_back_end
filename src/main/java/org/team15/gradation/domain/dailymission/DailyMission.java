@@ -36,7 +36,8 @@ public class DailyMission {
         channel.getDailyMissions().add(this);
     }
 
-    public void update(String content) {
-        this.content = content;
+    public void update(DailyMissionUpdateRequestDto requestDto) {
+        this.content = requestDto.getContent();
     }
+
 }

@@ -9,32 +9,32 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.team15.gradation.config.auth.LoginUser;
 import org.team15.gradation.config.auth.dto.SessionUser;
-import org.team15.gradation.service.post.LikesService;
+import org.team15.gradation.service.post.PostLikesService;
 
 @RequiredArgsConstructor
 @Controller
-public class LikesController {
+public class PostLikesController {
 
-    private final LikesService likesService;
+    private final PostLikesService postLikesService;
 
     @PostMapping("/api/v1/post/likes/{postId}")
     public ResponseEntity save(@PathVariable("postId") Long postId,
                                @LoginUser SessionUser user) {
 
-        return likesService.save(postId, user);
+        return postLikesService.save(postId, user);
     }
 
     @GetMapping("/api/v1/post/likes/{postId}")
-    public ResponseEntity findLikes(@PathVariable("postId") Long postId,
-                                    @LoginUser SessionUser user) {
+    public ResponseEntity findPostLikes(@PathVariable("postId") Long postId,
+                                        @LoginUser SessionUser user) {
 
-        return likesService.findLikes(postId, user);
+        return postLikesService.findPostLikes(postId, user);
     }
 
     @DeleteMapping("/api/v1/post/likes/{likesId}")
     public ResponseEntity delete(@PathVariable("likesId") Long likesId,
                                  @LoginUser SessionUser user) {
 
-        return likesService.delete(likesId, user);
+        return postLikesService.delete(likesId, user);
     }
 }

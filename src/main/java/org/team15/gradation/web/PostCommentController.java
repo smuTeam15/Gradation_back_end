@@ -23,10 +23,10 @@ public class PostCommentController {
     }
 
     @GetMapping("/api/v1/post/comment/{postId}")
-    public ResponseEntity findPostCommments(@PathVariable("postId") Long postId,
-                                            @LoginUser SessionUser user) {
+    public ResponseEntity findPostComment(@PathVariable("postId") Long postId,
+                                          @LoginUser SessionUser user) {
 
-        return postCommentService.findPostComments(postId, user);
+        return postCommentService.findPostComment(postId, user);
     }
 
     @DeleteMapping("/api/v1/post/comment/{postCommentId}")

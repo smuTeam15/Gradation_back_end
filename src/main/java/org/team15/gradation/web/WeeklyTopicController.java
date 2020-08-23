@@ -15,11 +15,12 @@ public class WeeklyTopicController {
 
     private final WeeklyTopicService weeklyTopicService;
 
-    @PostMapping("/api/v1/weeklytopic")
-    public ResponseEntity save(@RequestBody WeeklyTopicSaveRequestDto requestDto,
+    @PostMapping("/api/v1/weeklytopic/{channelId}")
+    public ResponseEntity save(@PathVariable("channelId") Long channelId,
+                               @RequestBody WeeklyTopicSaveRequestDto requestDto,
                                @LoginUser SessionUser user) {
 
-        return weeklyTopicService.save(requestDto, user);
+        return weeklyTopicService.save(channelId, requestDto, user);
     }
 
     @GetMapping("/api/v1/weeklytopic/{channelId}")
@@ -29,19 +30,18 @@ public class WeeklyTopicController {
         return weeklyTopicService.findWeeklyTopic(channelId, user);
     }
 
-    @PutMapping("/api/v1/weeklytopic/{channelId}")
-    public ResponseEntity update(@PathVariable("channelId") Long channelId,
+    @PutMapping("/api/v1/weeklytopic/{weeklyTopicId}")
+    public ResponseEntity update(@PathVariable("weeklyTopicId") Long weeklyTopicId,
                                  @RequestBody WeeklyTopicUpdateRequestDto weeklyTopicUpdateRequestDto,
                                  @LoginUser SessionUser user) {
 
-        return weeklyTopicService.update(channelId, weeklyTopicUpdateRequestDto, user);
+        return weeklyTopicService.update(weeklyTopicId, weeklyTopicUpdateRequestDto, user);
     }
 
-    @DeleteMapping("/api/v1/weeklytopic/{channelId}/{weeklyTopicId}")
-    public ResponseEntity delete(@PathVariable("channelId") Long channelId,
-                                 @PathVariable("weeklyTopicId") Long weeklyTopicId,
+    @DeleteMapping("/api/v1/weeklytopic/{weeklyTopicId}")
+    public ResponseEntity delete(@PathVariable("weeklyTopicId") Long weeklyTopicId,
                                  @LoginUser SessionUser user) {
 
-        return weeklyTopicService.delete(channelId, weeklyTopicId, user);
+        return weeklyTopicService.delete(weeklyTopicId, user);
     }
 }

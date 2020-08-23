@@ -27,22 +27,23 @@ public class PostService {
     private final UserRepository userRepository;
 
     @Transactional
-    public Long save(PostSaveRequestDto requestDto) {
+    public Long save(Long channelId, PostSaveRequestDto requestDto, SessionUser user) {
 
-        Channel findChannel = channelRepository.findById(requestDto.getChannelId()).orElse(null);
+        Channel findChannel = channelRepository.findById(channelId).orElse(null);
 
         if (findChannel == null)
             return -2L;
-        else if (!findChannel.isMember(requestDto.getUserId()))
+        else if (!findChannel.isMember(user.getId()))
             return -1L;
 
         Post savePost = requestDto.toEntity();
 
-        savePost.makePost(findChannel, userRepository.findById(requestDto.getUserId()).get());
+        savePost.makePost(findChannel, userRepository.findById(user.getId()).get());
 
         return postRepository.save(savePost).getId();
     }
 
+    @Transactional
     public ResponseEntity findPosts(Long channelId, SessionUser user) {
 
         Channel findChannel = channelRepository.findById(channelId).orElse(null);
@@ -57,6 +58,7 @@ public class PostService {
         return new ResponseEntity(posts, HttpStatus.OK);
     }
 
+    @Transactional
     public Long update(Long postId, PostUpdateRequestDto requestDto, SessionUser user) {
 
         Post findPost = postRepository.findById(postId).orElse(null);
@@ -69,5 +71,20 @@ public class PostService {
         findPost.update(requestDto);
 
         return postId;
+    }
+
+    @Transactional
+    public ResponseEntity delete(Long postId, SessionUser user) {
+
+        Post findPost = postRepository.findById(postId).orElse(null);
+
+        if (findPost == null)
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
+        else if (findPost.getChannel().isMember(user.getId()))
+            return new ResponseEntity(HttpStatus.FORBIDDEN);
+
+        postRepository.delete(findPost);
+
+        return new ResponseEntity(HttpStatus.OK);
     }
 }

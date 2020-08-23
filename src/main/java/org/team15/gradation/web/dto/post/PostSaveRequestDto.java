@@ -9,13 +9,9 @@ import org.team15.gradation.domain.post.Post;
 public class PostSaveRequestDto {
 
     private String content;
-    private Long userId;
-    private Long channelId;
 
-    public PostSaveRequestDto(String content, Long userId, Long channelId) {
+    public PostSaveRequestDto(String content) {
         this.content = content;
-        this.userId = userId;
-        this.channelId = channelId;
     }
 
     public Post toEntity() {

@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.team15.gradation.domain.post.Post;
 import org.team15.gradation.service.S3Service;
-import org.team15.gradation.web.dto.post.Likes.LikesResponseDto;
+import org.team15.gradation.web.dto.post.Likes.PostLikesResponseDto;
 import org.team15.gradation.web.dto.post.comment.PostCommentResponseDto;
 
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ public class PostResponseDto {
     private String content;
     private String userName;
     private String userPicture;
-    private List<LikesResponseDto> likesId = new ArrayList<>();
+    private List<PostLikesResponseDto> likesId = new ArrayList<>();
     private List<PostCommentResponseDto> comments = new ArrayList<>();
 
     public PostResponseDto(Post entity) {
@@ -29,7 +29,7 @@ public class PostResponseDto {
         this.userName = entity.getUser().getName();
         this.userPicture = entity.getUser().getPicture();
         this.likesId = entity.getLikes().stream()
-                .map(LikesResponseDto::new)
+                .map(PostLikesResponseDto::new)
                 .collect(Collectors.toList());
         this.comments = entity.getPostComments().stream()
                 .map(PostCommentResponseDto::new)

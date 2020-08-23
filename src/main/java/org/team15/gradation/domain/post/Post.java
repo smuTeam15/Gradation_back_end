@@ -4,7 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.team15.gradation.domain.channel.Channel;
-import org.team15.gradation.domain.likes.Likes;
+import org.team15.gradation.domain.post.likes.PostLikes;
 import org.team15.gradation.domain.post.comment.PostComment;
 import org.team15.gradation.domain.user.User;
 import org.team15.gradation.web.dto.PostUpdateRequestDto;
@@ -38,7 +38,7 @@ public class Post {
     private Channel channel;
 
     @OneToMany(mappedBy = "post")
-    private List<Likes> likes = new ArrayList<>();
+    private List<PostLikes> likes = new ArrayList<>();
 
     @Builder
     public Post(String content, User user, Channel channel) {

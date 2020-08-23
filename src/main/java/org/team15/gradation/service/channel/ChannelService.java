@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.team15.gradation.config.auth.dto.SessionUser;
 import org.team15.gradation.domain.channel.Channel;
 import org.team15.gradation.domain.channel.ChannelRepository;
+import org.team15.gradation.domain.user.User;
 import org.team15.gradation.domain.user.UserRepository;
 import org.team15.gradation.web.dto.channel.ChannelResponseDto;
 import org.team15.gradation.web.dto.channel.ChannelSaveRequestDto;
@@ -26,7 +27,10 @@ public class ChannelService {
 
         Channel saveChannel = requestDto.toEntity();
 
-        userRepository.findById(user.getId()).get().getChannels().add(saveChannel);
+        User findUser = userRepository.findById(user.getId()).get();
+
+        findUser.getChannels().add(saveChannel);
+        saveChannel.getUsers().add(findUser);
 
         return channelRepository.save(saveChannel).getId();
     }

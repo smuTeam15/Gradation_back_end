@@ -7,16 +7,10 @@ import org.team15.gradation.domain.dailymission.DailyMission;
 @Getter
 public class DailyMissionSaveRequestDto {
     private String content;
-    private Long channelId;
 
     @Builder
-    public DailyMissionSaveRequestDto(String content, Long channelId) {
+    public DailyMissionSaveRequestDto(String content) {
         this.content = content;
-        this.channelId = channelId;
-    }
-
-    public void setChannelId(Long channelId) {
-        this.channelId = channelId;
     }
 
     public DailyMission toEntity() {

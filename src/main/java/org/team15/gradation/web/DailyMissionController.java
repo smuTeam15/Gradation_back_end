@@ -27,9 +27,9 @@ public class DailyMissionController {
                                @RequestParam("channelId") Long channelId,
                                @LoginUser SessionUser user) throws IOException {
 
-        DailyMissionSaveRequestDto requestDto = new DailyMissionSaveRequestDto(content, channelId);
+        DailyMissionSaveRequestDto requestDto = new DailyMissionSaveRequestDto(content);
 
-        final Long save = dailyMissionService.save(requestDto, user);
+        final Long save = dailyMissionService.save(channelId, requestDto, user);
 
         if (save == -1L)
             return new ResponseEntity(HttpStatus.FORBIDDEN);
@@ -47,16 +47,15 @@ public class DailyMissionController {
         return dailyMissionService.findMyDailyMission(channelId, user);
     }
 
-    @PutMapping("/api/v1/dailymission/{channelId}")
-    public ResponseEntity update(@PathVariable Long channelId,
-                                 @RequestParam("id") Long id,
-                                 @RequestParam("content") String content,
+    @PutMapping("/api/v1/dailymission/{dailyMissionId}")
+    public ResponseEntity update(@PathVariable Long dailyMissionId,
                                  @RequestParam("picture") MultipartFile picture,
+                                 @RequestParam("content") String content,
                                  @LoginUser SessionUser user) throws IOException {
 
-        DailyMissionUpdateRequestDto requestDto = new DailyMissionUpdateRequestDto(id, content);
+        DailyMissionUpdateRequestDto requestDto = new DailyMissionUpdateRequestDto(content);
 
-        final Long result = dailyMissionService.update(channelId, requestDto, user);
+        final Long result = dailyMissionService.update(dailyMissionId, requestDto, user);
 
         if (result == -1L)
             return new ResponseEntity(HttpStatus.FORBIDDEN);
@@ -68,12 +67,11 @@ public class DailyMissionController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @DeleteMapping("/api/v1/dailymission/{channelId}/{dailyMissionId}")
-    public ResponseEntity delete(@PathVariable("channelId") Long channelId,
-                                 @PathVariable("dailyMissionId") Long dailyMissionId,
+    @DeleteMapping("/api/v1/dailymission/{dailyMissionId}")
+    public ResponseEntity delete(@PathVariable("dailyMissionId") Long dailyMissionId,
                                  @LoginUser SessionUser user) {
 
-        final Long result = dailyMissionService.delete(channelId, dailyMissionId, user);
+        final Long result = dailyMissionService.delete(dailyMissionId, user);
 
         if (result == -1L)
             return new ResponseEntity(HttpStatus.FORBIDDEN);

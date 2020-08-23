@@ -1,6 +1,5 @@
-package org.team15.gradation.domain.likes;
+package org.team15.gradation.domain.post.likes;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.team15.gradation.domain.post.Post;
@@ -11,7 +10,7 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor
 @Entity
-public class Likes {
+public class PostLikes {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -25,11 +24,6 @@ public class Likes {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-
-    public Likes(Post post, User user) {
-        this.post = post;
-        this.user = user;
-    }
 
     public void make(Post post, User user) {
         this.post = post;

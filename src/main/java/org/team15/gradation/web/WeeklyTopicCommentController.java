@@ -1,7 +1,6 @@
 package org.team15.gradation.web;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.team15.gradation.config.auth.LoginUser;
@@ -23,14 +22,13 @@ public class WeeklyTopicCommentController {
         return weeklyTopicCommentService.save(weeklyTopicId, requestDto, user);
     }
 
-    @GetMapping("/api/v1/weeklytopic/comment/{weeklyTopicId")
+    @GetMapping("/api/v1/weeklytopic/comment/{weeklyTopicId}")
     public ResponseEntity findById(@PathVariable("weeklyTopicId") Long weeklyTopicId,
                                    @LoginUser SessionUser user) {
 
         return weeklyTopicCommentService.findWeeklyTopicComment(weeklyTopicId, user);
     }
 
-    // commentId로 하나씩 찾아가야 예상치 못한 경로이동이 발생하지 않는다.
     @DeleteMapping("/api/v1/weeklytopic/comment/{weeklyTopicCommentId}")
     public ResponseEntity delete(@PathVariable("weeklyTopicCommentId") Long weeklyTopicCommentId,
                                  @LoginUser SessionUser user) {

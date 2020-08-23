@@ -46,7 +46,7 @@ public class PostCommentService {
     }
 
     @Transactional
-    public ResponseEntity findPostComments(Long postId, SessionUser user) {
+    public ResponseEntity findPostComment(Long postId, SessionUser user) {
 
         Post findPost = postRepository.findById(postId).orElse(null);
 
