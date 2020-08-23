@@ -25,9 +25,9 @@ public class WeeklyTopicService {
     private final WeeklyTopicRepository weeklyTopicRepository;
 
     @Transactional
-    public ResponseEntity save(WeeklyTopicSaveRequestDto requestDto, SessionUser user) {
+    public ResponseEntity save(Long channelId, WeeklyTopicSaveRequestDto requestDto, SessionUser user) {
 
-        Channel findChannel = channelRepository.findById(requestDto.getChannelId()).orElse(null);
+        Channel findChannel = channelRepository.findById(channelId).orElse(null);
 
         if (findChannel == null)
             return new ResponseEntity(HttpStatus.NO_CONTENT);
@@ -61,19 +61,14 @@ public class WeeklyTopicService {
     }
 
     @Transactional
-    public ResponseEntity update(Long channelId, WeeklyTopicUpdateRequestDto requestDto, SessionUser user) {
+    public ResponseEntity update(Long weeklyTopicId, WeeklyTopicUpdateRequestDto requestDto, SessionUser user) {
 
-        Channel findChannel = channelRepository.findById(channelId).orElse(null);
-
-        if (findChannel == null)
-            return new ResponseEntity(HttpStatus.NO_CONTENT);
-        else if (!findChannel.getOwner().equals(user.getId()))
-            return new ResponseEntity(HttpStatus.FORBIDDEN);
-
-        WeeklyTopic findWeeklyTopic = weeklyTopicRepository.findById(requestDto.getId()).orElse(null);
+        WeeklyTopic findWeeklyTopic = weeklyTopicRepository.findById(weeklyTopicId).orElse(null);
 
         if (findWeeklyTopic == null)
             return new ResponseEntity(HttpStatus.NO_CONTENT);
+        else if (!findWeeklyTopic.getChannel().getOwner().equals(user.getId()))
+            return new ResponseEntity(HttpStatus.FORBIDDEN);
 
         findWeeklyTopic.update(requestDto);
 
@@ -81,19 +76,14 @@ public class WeeklyTopicService {
     }
 
     @Transactional
-    public ResponseEntity delete(Long channelId, Long weeklyTopicId, SessionUser user) {
-
-        Channel findChannel = channelRepository.findById(channelId).orElse(null);
-
-        if (findChannel == null)
-            return new ResponseEntity(HttpStatus.NO_CONTENT);
-        else if (!findChannel.getOwner().equals(user.getId()))
-            return new ResponseEntity(HttpStatus.FORBIDDEN);
+    public ResponseEntity delete(Long weeklyTopicId, SessionUser user) {
 
         WeeklyTopic findWeeklyTopic = weeklyTopicRepository.findById(weeklyTopicId).orElse(null);
 
         if (findWeeklyTopic == null)
             return new ResponseEntity(HttpStatus.NO_CONTENT);
+        else if (!findWeeklyTopic.getChannel().getOwner().equals(user.getId()))
+            return new ResponseEntity(HttpStatus.FORBIDDEN);
 
         weeklyTopicRepository.delete(findWeeklyTopic);
 

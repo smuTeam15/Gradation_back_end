@@ -26,19 +26,16 @@ public class DailyMissionService {
     private final ChannelRepository channelRepository;
 
     @Transactional
-    public Long save(DailyMissionSaveRequestDto requestDto, SessionUser user) {
+    public Long save(Long channelId, DailyMissionSaveRequestDto requestDto, SessionUser user) {
 
-        Channel findChannel = channelRepository.findById(requestDto.getChannelId()).orElse(null);
+        Channel findChannel = channelRepository.findById(channelId).orElse(null);
 
         if (findChannel == null)
             return -2L;
         else if (!findChannel.getOwner().equals(user.getId()))
             return -1L;
 
-        DailyMission dailyMission = new DailyMission().builder()
-                .content(requestDto.getContent())
-                .channel(findChannel)
-                .build();
+        DailyMission dailyMission = requestDto.toEntity();
 
         dailyMission.createDailyMission(findChannel);
 
@@ -64,42 +61,32 @@ public class DailyMissionService {
     }
 
     @Transactional
-    public Long update(Long channelId, DailyMissionUpdateRequestDto requestDto, SessionUser user) {
-
-        Channel findChannel = channelRepository.findById(channelId).orElse(null);
-
-        if (findChannel == null)
-            return -2L;
-        else if (findChannel.getOwner() != user.getId())
-            return -1L;
-
-        DailyMission findDailyMission = dailyMissionRepository.findById(requestDto.getId()).orElse(null);
-
-        if (findDailyMission == null)
-            return -2L;
-
-        findDailyMission.update(requestDto.getContent());
-
-        return channelId;
-    }
-
-    @Transactional
-    public Long delete(Long channelId, Long dailyMissionId, SessionUser user) {
-
-        Channel findChannel = channelRepository.findById(channelId).orElse(null);
-
-        if (findChannel == null)
-            return -2L;
-        else if (findChannel.getOwner() != user.getId())
-            return -1L;
+    public Long update(Long dailyMissionId, DailyMissionUpdateRequestDto requestDto, SessionUser user) {
 
         DailyMission findDailyMission = dailyMissionRepository.findById(dailyMissionId).orElse(null);
 
         if (findDailyMission == null)
             return -2L;
+        else if (!findDailyMission.getChannel().getOwner().equals(user.getId()))
+            return -1L;
+
+        findDailyMission.update(requestDto);
+
+        return dailyMissionId;
+    }
+
+    @Transactional
+    public Long delete(Long dailyMissionId, SessionUser user) {
+
+        DailyMission findDailyMission = dailyMissionRepository.findById(dailyMissionId).orElse(null);
+
+        if (findDailyMission == null)
+            return -2L;
+        else if (!findDailyMission.getChannel().getOwner().equals(user.getId()))
+            return -1L;
 
         dailyMissionRepository.delete(findDailyMission);
 
-        return channelId;
+        return dailyMissionId;
     }
 }

@@ -15,7 +15,6 @@ import org.team15.gradation.domain.weeklytopic.comment.WeeklyTopicCommentReposit
 import org.team15.gradation.web.dto.weeklytopic.WeeklyTopicCommentResponseDto;
 import org.team15.gradation.web.dto.weeklytopic.WeeklyTopicCommentSaveRequestDto;
 
-import javax.xml.ws.Response;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,8 +36,8 @@ public class WeeklyTopicCommentService {
         else if (!findWeeklyTopic.getChannel().isMember(user.getId()))
             return new ResponseEntity(HttpStatus.FORBIDDEN);
 
-        User currUser = userRepository.findById(user.getId()).get();
         WeeklyTopicComment weeklyTopicComment = requestDto.toEntity();
+        User currUser = userRepository.findById(user.getId()).get();
         weeklyTopicComment.createWeeklyTopicComment(findWeeklyTopic, currUser);
 
         weeklyTopicCommentRepository.save(weeklyTopicComment);
@@ -69,11 +68,7 @@ public class WeeklyTopicCommentService {
 
         if (findWeeklyTopicComment == null)
             return new ResponseEntity(HttpStatus.NO_CONTENT);
-
-        //TODO : Comment 가 있으면 topic도 이미 존재하는 상태, cascasde
-        WeeklyTopic findWeeklyTopic = findWeeklyTopicComment.getWeeklyTopic();
-
-        if (!findWeeklyTopic.getChannel().isMember(user.getId()))
+        else if (!findWeeklyTopicComment.getUser().getId().equals(user.getId()))
             return new ResponseEntity(HttpStatus.FORBIDDEN);
 
         weeklyTopicCommentRepository.delete(findWeeklyTopicComment);

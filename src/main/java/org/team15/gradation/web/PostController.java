@@ -27,15 +27,14 @@ public class PostController {
                                @RequestParam("channelId") Long channelId,
                                @LoginUser SessionUser user) throws IOException {
 
-        PostSaveRequestDto requestDto = new PostSaveRequestDto(content, user.getId(), channelId);
+        PostSaveRequestDto requestDto = new PostSaveRequestDto(content);
 
-        final Long save = postService.save(requestDto);
+        final Long save = postService.save(channelId, requestDto, user);
 
-        if (save == -1L) {
+        if (save == -1L)
             return new ResponseEntity(HttpStatus.FORBIDDEN);
-        } else if (save == -2L) {
+        else if (save == -2L)
             return new ResponseEntity(HttpStatus.NO_CONTENT);
-        }
 
         s3Service.upload("Post", save.toString(), picture);
 
@@ -69,7 +68,10 @@ public class PostController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @DeleteMapping("/api/v1/post")
-    public void delete(@PathVariable Long channelId, @LoginUser SessionUser user) {
+    @DeleteMapping("/api/v1/post/{postId}")
+    public ResponseEntity delete(@PathVariable Long postId,
+                                 @LoginUser SessionUser user) {
+
+        return postService.delete(postId, user);
     }
 }

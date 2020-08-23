@@ -9,8 +9,7 @@ public class DailyMissionUpdateRequestDto {
     private Long id;
     private String content;
 
-    public DailyMissionUpdateRequestDto(Long id, String content) {
-        this.id = id;
+    public DailyMissionUpdateRequestDto(String content) {
         this.content = content;
     }
 }

@@ -6,24 +6,24 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.team15.gradation.config.auth.dto.SessionUser;
-import org.team15.gradation.domain.likes.Likes;
-import org.team15.gradation.domain.likes.LikesRepository;
 import org.team15.gradation.domain.post.Post;
 import org.team15.gradation.domain.post.PostRepository;
+import org.team15.gradation.domain.post.likes.PostLikes;
+import org.team15.gradation.domain.post.likes.PostLikesRepository;
 import org.team15.gradation.domain.user.User;
 import org.team15.gradation.domain.user.UserRepository;
-import org.team15.gradation.web.dto.post.Likes.LikesResponseDto;
+import org.team15.gradation.web.dto.post.Likes.PostLikesResponseDto;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
-public class LikesService {
+public class PostLikesService {
 
     private final UserRepository userRepository;
     private final PostRepository postRepository;
-    private final LikesRepository likesRepository;
+    private final PostLikesRepository postLikesRepository;
 
     @Transactional
     public ResponseEntity save(Long postId, SessionUser user) {
@@ -35,20 +35,20 @@ public class LikesService {
         else if (!findPost.getChannel().isMember(user.getId()))
             return new ResponseEntity(HttpStatus.FORBIDDEN);
 
-        if (likesRepository.findByUserId(user.getId()) != null)
+        if (postLikesRepository.findByPostIdAndUserId(postId, user.getId()) == null)
             return new ResponseEntity(HttpStatus.OK);
 
         User findUser = userRepository.findById(user.getId()).get();
-        Likes likes = new Likes(findPost, findUser);
-        likes.make(findPost, findUser);
+        PostLikes postLikes = new PostLikes();
+        postLikes.make(findPost, findUser);
 
-        likesRepository.save(likes);
+        postLikesRepository.save(postLikes);
 
         return new ResponseEntity(HttpStatus.OK);
     }
 
     @Transactional
-    public ResponseEntity findLikes(Long postId, SessionUser user) {
+    public ResponseEntity findPostLikes(Long postId, SessionUser user) {
 
         Post findPost = postRepository.findById(postId).orElse(null);
 
@@ -57,7 +57,7 @@ public class LikesService {
         else if (!findPost.getChannel().isMember(user.getId()))
             return new ResponseEntity(HttpStatus.FORBIDDEN);
 
-        List<LikesResponseDto> findLikes = findPost.getLikes().stream().map(LikesResponseDto::new).collect(Collectors.toList());
+        List<PostLikesResponseDto> findLikes = findPost.getLikes().stream().map(PostLikesResponseDto::new).collect(Collectors.toList());
 
         return new ResponseEntity(findLikes, HttpStatus.OK);
     }
@@ -65,14 +65,14 @@ public class LikesService {
     @Transactional
     public ResponseEntity delete(Long likesId, SessionUser user) {
 
-        Likes findLikes = likesRepository.findById(likesId).orElse(null);
+        PostLikes findPostLikes = postLikesRepository.findById(likesId).orElse(null);
 
-        if (findLikes == null)
+        if (findPostLikes == null)
             return new ResponseEntity(HttpStatus.NO_CONTENT);
-        else if (findLikes.getPost().getChannel().isMember(user.getId()))
+        else if (findPostLikes.getPost().getChannel().isMember(user.getId()))
             return new ResponseEntity(HttpStatus.FORBIDDEN);
 
-        likesRepository.delete(findLikes);
+        postLikesRepository.delete(findPostLikes);
 
         return new ResponseEntity(HttpStatus.OK);
     }

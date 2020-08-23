@@ -8,7 +8,6 @@ public class WeeklyTopicSaveRequestDto {
     private String title;
     private String category;
     private String content;
-    private Long channelId;
 
     public WeeklyTopic toEntity() {
         return WeeklyTopic.builder()
@@ -16,6 +15,5 @@ public class WeeklyTopicSaveRequestDto {
                 .category(category)
                 .content(content)
                 .build();
-
     }
 }

@@ -62,11 +62,10 @@ public class ChannelController {
 
         final Long result = channelService.update(user, channelId, requestDto);
 
-        if (result == -1L) {
+        if (result == -1L)
             return new ResponseEntity(HttpStatus.FORBIDDEN);
-        } else if (result == -2L) {
+        else if (result == -2L)
             return new ResponseEntity(HttpStatus.NO_CONTENT);
-        }
 
         s3Service.upload("FirstPicture", result.toString(), firstPicture);
         s3Service.upload("SecondPicture", result.toString(), secondPicture);
@@ -79,11 +78,10 @@ public class ChannelController {
 
         final Long result = channelService.delete(channelId, user);
 
-        if (result == -1L) {
+        if (result == -1L)
             return new ResponseEntity(HttpStatus.FORBIDDEN);
-        } else if (result == -2L) {
+        else if (result == -2L)
             return new ResponseEntity(HttpStatus.NO_CONTENT);
-        }
 
         s3Service.delete("FirstPicture", result.toString());
         s3Service.delete("SecondPicture", result.toString());
