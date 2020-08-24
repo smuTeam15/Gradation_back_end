@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface PostLikesRepository extends JpaRepository<PostLikes, Long> {
 
-    List<PostLikes> findByPostIdAndUserId(Long postId, Long userId);
+    PostLikes findByPostIdAndUserId(Long postId, Long userId);
 }
