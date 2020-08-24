@@ -9,15 +9,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-@Setter
 @NoArgsConstructor
 public class MainPageResponseDto {
 
+    private Long userId;
     private String userName;
     private String picture;
     private List<ChannelResponseDto> channelList = new ArrayList<>();
 
-    public void update(String userName, String picture, List<ChannelResponseDto> channelList) {
+    public void update(Long userId, String userName, String picture, List<ChannelResponseDto> channelList) {
+        this.userId = userId;
         this.userName = userName;
         this.picture = picture;
         this.channelList = channelList;
