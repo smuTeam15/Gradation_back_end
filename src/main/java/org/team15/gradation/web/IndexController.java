@@ -17,15 +17,14 @@ public class IndexController {
     private final ChannelService channelService;
 
     @GetMapping("/v1/login")
-    public MainPageResponseDto login(){
-        //반환 dto 만들기
+    public MainPageResponseDto login() {
+
         SessionUser user = (SessionUser) httpSession.getAttribute("user");
 
         MainPageResponseDto responseDto = new MainPageResponseDto();
 
-        if(user != null){
-            responseDto.update(user.getName(), user.getPicture(), channelService.findMyChannel(user.getId()));
-        }
+        if (user != null)
+            responseDto.update(user.getId(), user.getName(), user.getPicture(), channelService.findMyChannel(user.getId()));
 
         return responseDto;
     }
