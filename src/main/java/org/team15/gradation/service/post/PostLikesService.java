@@ -35,7 +35,7 @@ public class PostLikesService {
         else if (!findPost.getChannel().isMember(user.getId()))
             return new ResponseEntity(HttpStatus.FORBIDDEN);
 
-        if (postLikesRepository.findByPostIdAndUserId(postId, user.getId()) == null)
+        if (postLikesRepository.findByPostIdAndUserId(postId, user.getId()) != null)
             return new ResponseEntity(HttpStatus.OK);
 
         User findUser = userRepository.findById(user.getId()).get();
