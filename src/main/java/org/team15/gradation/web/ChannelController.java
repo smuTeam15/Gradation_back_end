@@ -93,10 +93,6 @@ public class ChannelController {
     public ResponseEntity joinChannel(@PathVariable("channelCode") String channelCode,
                                       @LoginUser SessionUser user) {
 
-        /*
-         * 일단은 user has channel을 수정해야 가입하는게 스무스하게 될듯합니다.
-         *
-         * */
-        return new ResponseEntity(HttpStatus.OK);
+        return channelService.joinChannel(channelCode, user);
     }
 }

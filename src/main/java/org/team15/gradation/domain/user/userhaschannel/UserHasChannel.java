@@ -24,10 +24,10 @@ public class UserHasChannel {
     @JoinColumn(name = "channel_id")
     private Channel channel;
 
-    public void makeUserHasChannel(User findUser, Channel saveChannel) {
-        this.user = findUser;
-        this.channel = saveChannel;
-        findUser.getChannels().add(this);
-        saveChannel.getUsers().add(this);
+    public void makeUserHasChannel(User user, Channel channel) {
+        this.user = user;
+        this.channel = channel;
+        user.getChannels().add(this);
+        channel.getUsers().add(this);
     }
 }

@@ -1,6 +1,8 @@
 package org.team15.gradation.service.channel;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.team15.gradation.config.auth.dto.SessionUser;
@@ -110,5 +112,19 @@ public class ChannelService {
         return buffer.toString();
     }
 
-    //TODO 채널 들어가기 How/?
+    public ResponseEntity joinChannel(String channelCode, SessionUser user) {
+
+        Channel findChannel = channelRepository.findByCode(channelCode);
+        User findUser = userRepository.findById(user.getId()).orElse(null);
+
+        if (findChannel == null || findUser == null)
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
+
+        UserHasChannel userHasChannel = new UserHasChannel();
+        userHasChannel.makeUserHasChannel(findUser, findChannel);
+
+        userHasChannelRepository.save(userHasChannel);
+
+        return new ResponseEntity(HttpStatus.OK);
+    }
 }
