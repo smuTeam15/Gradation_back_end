@@ -3,7 +3,7 @@ package org.team15.gradation.domain.user;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.team15.gradation.domain.channel.Channel;
+import org.team15.gradation.domain.user.userhaschannel.UserHasChannel;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -31,11 +31,8 @@ public class User {
     @Column(nullable = false)
     private Role role;
 
-    @ManyToMany
-    @JoinTable(name = "USER_CHANNEL",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "channel_id"))
-    private List<Channel> channels = new ArrayList<>();
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<UserHasChannel> channels = new ArrayList<>();
 
     @Builder
     public User(Long id, String name, String email, String picture, Role role) {
@@ -46,19 +43,14 @@ public class User {
         this.role = role;
     }
 
-    public User update(String name, String picture){
+    public User update(String name, String picture) {
         this.name = name;
         this.picture = picture;
 
         return this;
     }
 
-    public void inrollChannel(Channel channel){
-        channels.add(channel);
-        channel.getUsers().add(this);
-    }
-
-    public String getRoleKey(){
+    public String getRoleKey() {
         return this.role.getKey();
     }
 }

@@ -2,7 +2,7 @@ package org.team15.gradation.web.dto.channel;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.team15.gradation.domain.channel.Channel;
+import org.team15.gradation.domain.user.userhaschannel.UserHasChannel;
 import org.team15.gradation.service.S3Service;
 
 @Getter
@@ -17,16 +17,18 @@ public class ChannelResponseDto {
     private String firstPicture;
     private String secondPicture;
     private Long owner;
+    private String code;
 
-    public ChannelResponseDto(Channel entity) {
-        this.id = entity.getId();
-        this.firstSchool = entity.getFirstSchool();
-        this.secondSchool = entity.getSecondSchool();
-        this.description = entity.getDescription();
-        this.category = entity.getCategory();
-        this.owner = entity.getOwner();
+    public ChannelResponseDto(UserHasChannel entity) {
+        this.id = entity.getChannel().getId();
+        this.firstSchool = entity.getChannel().getFirstSchool();
+        this.secondSchool = entity.getChannel().getSecondSchool();
+        this.description = entity.getChannel().getDescription();
+        this.category = entity.getChannel().getCategory();
+        this.owner = entity.getChannel().getOwner();
         this.firstPicture = S3Service.CLOUD_FRONT_DOMAIN_NAME + "FirstPicture_" + entity.getId();
         this.secondPicture = S3Service.CLOUD_FRONT_DOMAIN_NAME + "SecondPicture_" + entity.getId();
+        this.code = entity.getChannel().getCode();
     }
 
     public void setOwner(Long owner) {
