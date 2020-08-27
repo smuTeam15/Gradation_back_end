@@ -17,6 +17,7 @@ public class PostResponseDto {
     private Long id;
     private String picture;
     private String content;
+    private Long userId;
     private String userName;
     private String userPicture;
     private List<PostLikesResponseDto> likesId = new ArrayList<>();
@@ -26,6 +27,7 @@ public class PostResponseDto {
         this.id = entity.getId();
         this.picture = S3Service.CLOUD_FRONT_DOMAIN_NAME + "Post_" + entity.getId().toString();
         this.content = entity.getContent();
+        this.userId = entity.getUser().getId();
         this.userName = entity.getUser().getName();
         this.userPicture = entity.getUser().getPicture();
         this.likesId = entity.getLikes().stream()
