@@ -80,7 +80,7 @@ public class PostService {
 
         if (findPost == null)
             return new ResponseEntity(HttpStatus.NO_CONTENT);
-        else if (findPost.getChannel().isMember(user.getId()))
+        else if (!findPost.getChannel().isMember(user.getId()))
             return new ResponseEntity(HttpStatus.FORBIDDEN);
 
         postRepository.delete(findPost);
