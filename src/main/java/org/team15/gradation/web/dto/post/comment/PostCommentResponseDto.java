@@ -8,11 +8,13 @@ import org.team15.gradation.domain.post.comment.PostComment;
 @NoArgsConstructor
 public class PostCommentResponseDto {
     private Long commentId;
+    private Long userId;
     private String userName;
     private String comment;
 
     public PostCommentResponseDto(PostComment entity) {
         this.commentId = entity.getId();
+        this.userId = entity.getUser().getId();
         this.userName = entity.getUser().getName();
         this.comment = entity.getComment();
     }
