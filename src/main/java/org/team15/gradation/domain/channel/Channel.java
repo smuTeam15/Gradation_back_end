@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.team15.gradation.domain.dailymission.DailyMission;
 import org.team15.gradation.domain.post.Post;
-import org.team15.gradation.domain.user.User;
+import org.team15.gradation.domain.user.userhaschannel.UserHasChannel;
 import org.team15.gradation.domain.weeklytopic.WeeklyTopic;
 import org.team15.gradation.web.dto.channel.ChannelUpdateRequestDto;
 
@@ -39,8 +39,11 @@ public class Channel {
     @Column(nullable = false)
     private Long owner;
 
-    @ManyToMany(mappedBy = "channels", fetch = FetchType.LAZY)
-    private List<User> users = new ArrayList<>();
+    @Column(nullable = false, length = 10)
+    private String code;
+
+    @OneToMany(mappedBy = "channel", fetch = FetchType.LAZY)
+    private List<UserHasChannel> users = new ArrayList<>();
 
     @OneToMany(mappedBy = "channel", fetch = FetchType.LAZY)
     private List<DailyMission> dailyMissions = new ArrayList<>();
@@ -60,17 +63,21 @@ public class Channel {
         this.owner = owner;
     }
 
+    public void setCode(String code) {
+        this.code = code;
+    }
+
     public void update(ChannelUpdateRequestDto requestDto) {
-        this.firstSchool = firstSchool;
-        this.secondSchool = secondSchool;
-        this.description = description;
-        this.category = category;
+        this.firstSchool = requestDto.getFirstSchool();
+        this.secondSchool = requestDto.getSecondSchool();
+        this.description = requestDto.getDescription();
+        this.category = requestDto.getCategory();
     }
 
     public boolean isMember(Long userId) {
 
-        for (User user : users) {
-            if (user.getId().equals(userId))
+        for (UserHasChannel user : users) {
+            if (user.getUser().getId().equals(userId))
                 return true;
         }
 
