@@ -69,7 +69,7 @@ public class PostLikesService {
 
         if (findPostLikes == null)
             return new ResponseEntity(HttpStatus.NO_CONTENT);
-        else if (findPostLikes.getPost().getChannel().isMember(user.getId()))
+        else if (!findPostLikes.getPost().getChannel().isMember(user.getId()))
             return new ResponseEntity(HttpStatus.FORBIDDEN);
 
         postLikesRepository.delete(findPostLikes);
