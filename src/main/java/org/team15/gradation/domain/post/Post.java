@@ -3,9 +3,10 @@ package org.team15.gradation.domain.post;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.team15.gradation.domain.BaseTimeEntity;
 import org.team15.gradation.domain.channel.Channel;
-import org.team15.gradation.domain.post.likes.PostLikes;
 import org.team15.gradation.domain.post.comment.PostComment;
+import org.team15.gradation.domain.post.likes.PostLikes;
 import org.team15.gradation.domain.user.User;
 import org.team15.gradation.web.dto.PostUpdateRequestDto;
 
@@ -16,7 +17,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @Entity
-public class Post {
+public class Post extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
