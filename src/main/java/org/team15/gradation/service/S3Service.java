@@ -15,7 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 
 @NoArgsConstructor
 @Service
@@ -47,8 +47,8 @@ public class S3Service {
     }
 
     public String upload(String prefix, String id, MultipartFile file) throws IOException {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
-        String fileName = prefix + "_" + id + "_" + dateFormat.format(new LocalDateTime());
+        String now = java.time.LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+        String fileName = prefix + "_" + id + "_" + now;
 
         if (s3Client.doesObjectExist(bucket, fileName))
             s3Client.deleteObject(bucket, fileName);
