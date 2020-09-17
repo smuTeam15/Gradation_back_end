@@ -3,6 +3,7 @@ package org.team15.gradation.domain.post.comment;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.team15.gradation.domain.BaseTimeEntity;
 import org.team15.gradation.domain.post.Post;
 import org.team15.gradation.domain.user.User;
 
@@ -11,7 +12,7 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor
 @Entity
-public class PostComment {
+public class PostComment extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

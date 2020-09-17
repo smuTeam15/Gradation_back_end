@@ -92,8 +92,6 @@ public class ChannelService {
     }
 
     @Transactional
-
-
     private String makeChannelCode() {
         int passwordLength = 8;
         final char[] passwordTable = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
@@ -126,5 +124,10 @@ public class ChannelService {
         userHasChannelRepository.save(userHasChannel);
 
         return new ResponseEntity(HttpStatus.OK);
+    }
+
+    public void updatePictureUrl(Long channelId, String firstPictureName, String secondPictureName) {
+
+        channelRepository.updatePictureUrl(channelId, firstPictureName, secondPictureName);
     }
 }

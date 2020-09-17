@@ -8,12 +8,14 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.NoArgsConstructor;
+import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 
 @NoArgsConstructor
 @Service
@@ -44,14 +46,17 @@ public class S3Service {
                 .build();
     }
 
-    public void upload(String prefix, String id, MultipartFile file) throws IOException {
-        String fileName = prefix + "_" + id;
+    public String upload(String prefix, String id, MultipartFile file) throws IOException {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+        String fileName = prefix + "_" + id + "_" + dateFormat.format(new LocalDateTime());
 
         if (s3Client.doesObjectExist(bucket, fileName))
             s3Client.deleteObject(bucket, fileName);
 
         s3Client.putObject(new PutObjectRequest(bucket, fileName, file.getInputStream(), null)
                 .withCannedAcl(CannedAccessControlList.PublicRead));
+        
+        return fileName;
     }
 
     public void delete(String prefix, String id) {

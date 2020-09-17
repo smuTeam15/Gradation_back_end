@@ -21,7 +21,6 @@ public class Channel {
     @Id
     @Column(name = "channel_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    //@Convert(converter = StringCr)
     private Long id;
 
     @Column(name = "first_school", nullable = false)
@@ -29,6 +28,12 @@ public class Channel {
 
     @Column(name = "second_school", nullable = false)
     private String secondSchool;
+
+    @Column(name = "first_picture")
+    private String firstPicture;
+
+    @Column(name = "second_picture")
+    private String secondPicture;
 
     @Column(nullable = false)
     private String description;

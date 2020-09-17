@@ -36,8 +36,10 @@ public class ChannelController {
 
         final Long save = channelService.save(requestDto, user);
 
-        s3Service.upload("FirstPicture", save.toString(), firstPicture);
-        s3Service.upload("SecondPicture", save.toString(), secondPicture);
+        String firstPictureName = s3Service.upload("FirstPicture", save.toString(), firstPicture);
+        String secondPictureName = s3Service.upload("SecondPicture", save.toString(), secondPicture);
+
+        channelService.updatePictureUrl(save, firstPictureName, secondPictureName);
 
         return save;
     }
